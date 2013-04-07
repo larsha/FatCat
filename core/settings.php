@@ -5,7 +5,7 @@
 	 * The root directory in the file system tree of Ninja catalog.
 	 * Example: /var/www/Ninja/
 	 */
-	define( "ninja_root_dir", "/" );
+	define( "ninja_root_dir", "" );
 
 	/**
 	 * Database server to connect to.
