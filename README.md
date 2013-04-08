@@ -62,7 +62,7 @@ Views
 
 A basic view example. This view uses the Index view from the Core module and replaces the body variable with a loop and prints the articles from the controller example below.
 
-	use View\Core\Index
+	import View\Core\Index
 	
 	{{REPLACE body}}
 		{{FOR articles AS article}}
