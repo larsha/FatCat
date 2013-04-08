@@ -44,7 +44,7 @@ Basic model example. This is a file named "article.php" and placed in /model/art
 
 When a model is created and fields are added or changed the /core/sync.php script has to run one time to build the database with its tables. In the example above a database table named "article_article" will be created with a column called "title" in varchar(255).
 
-Database tables are named after the model (modelname_classname).
+Database tables are named after the model (modelname_classname). A field named "id" will always be created.
 
 Views
 -----
@@ -59,3 +59,28 @@ Views
 	<dt>Import other template</dt>
 	<dd>use View\Module\Template</dd>
 </dl>
+
+Controllers
+-----------
+
+Basic controller example. This controller loads all articles added created with the model from the example above and returns an array with the loaded content.
+
+	namespace Controller\Article;
+
+	use Core\Controller\Controller, Core\Db\Db, Core\Db\Type;
+
+	class Index extends Controller
+	{
+		public function GetData()
+		{
+			$data = Db::Select( "article_article" )
+				->Field( Type::Int, "id" )
+				->Field( Type::String, "title" )
+				->QueryGetData();
+
+			return array(
+				"title" => "My list of articles",
+				"articles" => $data
+			);
+		}
+	}
