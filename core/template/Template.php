@@ -82,7 +82,7 @@
 
 		private function IncludeFile()
 		{
-			if( preg_match( "/use (View\\\[a-z\\\]+)/is", $this->content, $matches ) )
+			if( preg_match( "/import (View\\\[a-z\\\]+)/is", $this->content, $matches ) )
 			{
 				// Get class hierarchy
 				$hierarchy = explode( "\\", $matches[1] );
