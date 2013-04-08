@@ -17,7 +17,7 @@
 				// Build controller hierarchy
 				$controller[0] = "Controller";
 
-				if( !isset( $controller[2] ) )
+				if( !isset( $controller[2] ) || $controller[2][0] == "" || $controller[2][0] == "?" )
 					$controller[2] = "Index";
 
 				try

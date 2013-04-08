@@ -112,6 +112,7 @@
 				case Type::Bool: 	return (bool)$value;
 				case Type::Int: 	return intval( $value );
 				case Type::String: 	return htmlentities( $value );
+				default: 			throw new \ErrorException( "Type not found. Use Core\\Db\\Type::*" );
 			}
 		}
 

@@ -5,6 +5,13 @@
 
 	use Core\Template\Template, Core\Controller\Controller;
 
+	// Load admin
+	if( substr( $_SERVER["REQUEST_URI"], 1, 5 ) == "admin" && ninja_enable_admin )
+	{
+		require_once( "../admin/index.php" );
+		exit();
+	}
+
 	/** @var $controller \Core\Controller\Controller */
 	if( ( $controller = Controller::LoadClassFromURI( $_SERVER["REQUEST_URI"] ) ) == FALSE )
 	{

@@ -1,7 +1,7 @@
 <?php
 	namespace Controller\Core;
 
-	use Core\Controller\Controller, Core\Db\Db, Core\Db\Type;
+	use Core\Controller\Controller, Core\Db\Type;
 
 	class Index extends Controller
 	{
@@ -9,7 +9,7 @@
 		{
 			return array(
 				"title" => "PHP Ninja framework",
-				"body" => "Light weight, easy to use and fast progress."
+				"body" => "Light weight, easy to use and fast progress with your projects."
 			);
 		}
 	}

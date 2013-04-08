@@ -63,7 +63,7 @@
 			{
 				list( $dbType, $field, $value ) = $item;
 
-				$fields[] = Type::Encode( $dbType, $value );
+				$fields[] = $this->ProcessData( $dbType, $value );
 			}
 
 			if( count( $fields ) <= 0 )
