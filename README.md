@@ -60,6 +60,18 @@ Views
 	<dd>use View\Module\Template</dd>
 </dl>
 
+A basiic view example. This view uses the Index view from the Core module and replaces the body variable with a loop and prints the articles from the controller example below.
+
+	use View\Core\Index
+	
+	{{REPLACE body}}
+		{{FOR articles AS article}}
+			<article>
+				<h1>{{article.title}} ({{article.id}})</h1>
+			</article>
+		{{ENDFOR}}
+	{{ENDREPLACE}}
+
 Controllers
 -----------
 
