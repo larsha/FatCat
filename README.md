@@ -1,6 +1,6 @@
 PHP Ninja framework
 ===================
-Light weight, easy to use and fast progress with your projects.
+Lightweight, easy to use and fast progress with your projects.
 
 Quick start
 -----------
