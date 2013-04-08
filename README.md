@@ -57,7 +57,7 @@ Views
 	<dt>Replace variable</dt>
 	<dd>{{REPLACE name}} {{ENDREPLACE}}</dd>
 	<dt>Import another template</dt>
-	<dd>use View\Module\Template</dd>
+	<dd>import View\Module\Template</dd>
 </dl>
 
 A basic view example. This view uses the Index view from the Core module and replaces the body variable with a loop and prints the articles from the controller example below.
