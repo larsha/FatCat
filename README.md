@@ -63,7 +63,7 @@ Views
 Controllers
 -----------
 
-Basic controller example. This controller loads all articles added created with the model from the example above and returns an array with the loaded content.
+Basic controller example. This controller loads all articles created with the model from the example above and returns an array with the loaded content.
 
 	namespace Controller\Article;
 
