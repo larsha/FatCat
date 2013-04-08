@@ -44,7 +44,7 @@ Basic model example. This is a file named "article.php" and placed in /model/art
 
 When a model is created and fields are added or changed the /core/sync.php script has to run one time to build the database with its tables. In the example above a database table named "article_article" will be created with a column called "title" in varchar(255).
 
-Database tables are named after the model (modelname_classname). A field named "id" will always be created.
+Database tables are named after the model (modelname_classname). A column named "id" will always be created.
 
 Views
 -----
