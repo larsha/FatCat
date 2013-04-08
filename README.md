@@ -25,6 +25,27 @@ Crash course
 Into the deep
 =============
 
+Models
+------
+
+Basic model example. This is a file named "article.php" and placed in /model/article/ directory. It also uses a database column called "title":
+
+	namespace Model\Article;
+
+	use Core\Model\Model, Core\Db\Type;
+
+	class Article extends Model
+	{
+		public function __construct()
+		{
+			$this->Add( Type::String, "title", 255 );
+		}
+	}
+
+When a model is created and fields are added or changed the /core/sync.php script has to run one time to build the database with its tables. In the example above a database table named "article_article" will be created with a column called "title" in varchar(255).
+
+Database tables are named with after the model (modelname_classname).
+
 Views
 -----
 
