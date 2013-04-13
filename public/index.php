@@ -19,11 +19,8 @@
 		exit();
 	}
 
-	// Get class hierarchy
-	$hierarchy = $controller->GetClassHierarchy();
-
 	// Process template
-	$template = new Template( "../view/".strtolower( $hierarchy[1] )."/".strtolower( $hierarchy[2] ).".tpl" );
+	$template = new Template( $controller->GetView() );
 	$template->SetVars( $controller->GetData() );
 	echo $template->Process();
 

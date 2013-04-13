@@ -9,6 +9,9 @@
 	 */
 	function getContents( $resource )
 	{
+		if( !is_resource( $resource ) )
+			return array();
+
 		$contents = array();
 
 		while( ( $dir = readdir( $resource ) ) !== false )
@@ -30,6 +33,9 @@
 	// Loop model dirs
 	foreach( $models AS $model )
 	{
+		if( !is_dir( $root."/".$model ) )
+			continue;
+
 		// Get model dirs content
 		$files = getContents( opendir( $root."/".$model ) );
 

@@ -1,8 +1,6 @@
 <?php
 	namespace Core\Template;
 
-	use Core\Controller\Controller;
-
 	class Template
 	{
 		private $content;
@@ -32,12 +30,7 @@
 		public function Process()
 		{
 			// Load file contents
-			ob_start();
-
-			require_once( $this->file );
-
-			$this->content = ob_get_contents();
-			ob_end_clean();
+			$this->content = file_get_contents( $this->file );
 
 			// Include linked template files
 			$this->IncludeFile();

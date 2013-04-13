@@ -8,7 +8,7 @@
 		public function GetData()
 		{
 			return array(
-				"title" => "PHP Ninja framework",
+				"title" => "Ninja",
 				"body" => "Light weight, easy to use and fast progress with your projects."
 			);
 		}

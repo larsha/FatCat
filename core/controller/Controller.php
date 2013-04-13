@@ -32,12 +32,27 @@
 			return isset( $class ) ? new $class() : FALSE;
 		}
 
+		protected $view;
+
 		/**
 		 * @return string
 		 */
 		public function GetClassHierarchy()
 		{
 			return explode( "\\", get_called_class() );
+		}
+
+		/**
+		 * @return string
+		 */
+		public function GetView()
+		{
+			if( $this->view )
+				return $this->view;
+
+			list( $catalog, $namespace, $class ) = $this->GetClassHierarchy();
+
+			return ninja_root_dir."view/".strtolower( $namespace )."/".strtolower( $class ).".tpl";
 		}
 
 		abstract public function GetData();
