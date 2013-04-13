@@ -8,9 +8,9 @@
 	define( "ninja_root_dir", "" );
 
 	/**
-	 * Database server to connect to.
+	 * Database server to connect to. "localhost" or IP address.
 	 */
-	define( "ninja_db_server", "localhost" );
+	define( "ninja_db_server", "" );
 
 	/**
 	 * Valid options are: sqlite, mysqli
@@ -20,7 +20,13 @@
 	/**
 	 * Database name or, if database is type sqlite, the directory of the database file.
 	 */
-	define( "ninja_db_name", ninja_root_dir."private/db/database.txt" );
+	define( "ninja_db_name", "" );
+
+	/**
+	 * Enables or disables admin. Admin is located at http://www.domain.com/admin
+	 */
+	define( "ninja_enable_admin", false );
 
 	// Initialize database connection
-	Core\Db\Connect::Instance()->Initialize();
+	if( ninja_db_server )
+		Core\Db\Connect::Instance()->Initialize();
