@@ -1,6 +1,8 @@
 <?php
 	namespace Core\Template;
 
+	use Core\Form\Form;
+
 	class Template
 	{
 		private $content;
@@ -40,6 +42,8 @@
 			{
 				if( is_array( $data ) )
 					$this->ReplaceArray( $key, $data );
+				elseif( is_object( $data ) )
+					$this->ReplaceObject( $key, $data );
 				else
 					$this->ReplaceString( $key, $data );
 			}
@@ -52,6 +56,19 @@
 
 		private function CleanUp()
 		{
+			// Remove unused if statements
+			if( preg_match_all( "/{{IF ([a-z]+)}}/is", $this->content, $matches ) )
+			{
+				foreach( $matches[1] AS $key => $match )
+				{
+					if( !array_key_exists( $match, $this->vars ) )
+					{
+						$this->content = preg_replace( "/".$matches[0][$key]."(.*?){{ENDIF}}/is", "", $this->content );
+					}
+				}
+			}
+
+			// Remove unused variables
 			$this->content = preg_replace( "/{{[a-z \.]+}}/is", "", $this->content );
 		}
 
@@ -106,6 +123,16 @@
 			}
 
 			$this->content = str_replace( $matches[0], $body, $this->content );
+		}
+
+		/**
+		 * @param string $key
+		 * @param object $data
+		 */
+		private function ReplaceObject( $key, $data )
+		{
+			if( $data instanceof Form )
+				$this->content = str_ireplace( "{{".$key."}}", $data->Generate(), $this->content );
 		}
 
 		/**

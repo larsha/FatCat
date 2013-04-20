@@ -49,15 +49,22 @@
 			/** @var $instance \Core\Model\Model */
 			$instance = new $class();
 
+			// Check if table exists
+			if( Table::Exists( strtolower( $model."_".$table ) ) )
+				continue;
+
 			// Create table
 			$db = new Table( strtolower( $model."_".$table ) );
 
 			// Loop models fields
 			foreach( $instance->Fields() AS $field )
 			{
-				list( $type, $name, $length ) = $field;
+				list( $type, $name, $alias, $args ) = $field;
 
-				$db->Field( $type, $name, $length );
+				$length = isset( $args["length"] ) ? $args["length"] : 0;
+				$foreignKey = isset( $args["foreign_key"] ) ? $args["foreign_key"] : "";
+
+				$db->Field( $type, $name, $length, $foreignKey );
 			}
 
 			// Query database

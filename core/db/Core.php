@@ -4,6 +4,7 @@
 	abstract class Core
 	{
 		protected $table;
+		private $queries;
 
 		/**
 		 * @param string $table
@@ -12,6 +13,7 @@
 		public function __construct( $table, $alias = "" )
 		{
 			$this->table = array( $table, $alias );
+			$this->queries = array();
 		}
 
 		/**
@@ -27,6 +29,8 @@
 		 */
 		public function Query()
 		{
+			Connect::Instance()->AddQuery( $this->ToSQL() );
+
 			switch( ninja_db_type )
 			{
 				case "mysqli":	return mysql_query( $this->ToSQL(), Connect::Instance()->GetResource() ); break;

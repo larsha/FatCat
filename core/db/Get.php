@@ -5,6 +5,8 @@
 	{
 		protected $fields;
 		protected $limit;
+		protected $order;
+		protected $where;
 
 		/**
 		 * @param string $table
@@ -14,7 +16,9 @@
 		{
 			parent::__construct( $table, $alias );
 
-			$this->fields = array();
+			$this->fields =
+			$this->order =
+			$this->where = array();
 		}
 
 		/**
@@ -23,9 +27,9 @@
 		 * @param string $alias
 		 * @return $this
 		 */
-		public function Field( $dbType, $field, $alias = "" )
+		public function Field( $dbType, $field, $alias = "", $args = array() )
 		{
-			$this->fields[] = array( $dbType, $field, $alias );
+			$this->fields[] = array( $dbType, $field, $alias, $args );
 			return $this;
 		}
 
@@ -36,7 +40,29 @@
 		public function Limit( $count )
 		{
 			$this->limit = intval( $count );
+			return $this;
+		}
 
+		/**
+		 * @param int $type
+		 * @param string $field
+		 * @param mixed $value
+		 * @return $this
+		 */
+		public function WhereEquals( $type, $field, $value )
+		{
+			$this->where[] = array( "=", $type, $field, $value );
+			return $this;
+		}
+
+		/**
+		 * @param string $field
+		 * @param bool $desc
+		 * @return $this
+		 */
+		public function OrderBy( $field, $desc = false )
+		{
+			$this->order = array( $field, $desc );
 			return $this;
 		}
 
@@ -92,28 +118,12 @@
 
 					if( array_key_exists( $name, $row ) )
 					{
-						$data[$key][$name] = $this->ProcessData( $type, $row[$name] );
+						$data[$key][$name] = Type::ProcessOutput( $type, $row[$name] );
 					}
 				}
 			}
 
 			return $data;
-		}
-
-		/**
-		 * @param int $type
-		 * @param mixed $value
-		 * @return mixed
-		 */
-		private function ProcessData( $type, $value )
-		{
-			switch( $type )
-			{
-				case Type::Bool: 	return (bool)$value;
-				case Type::Int: 	return intval( $value );
-				case Type::String: 	return htmlentities( $value );
-				default: 			throw new \ErrorException( "Type not found. Use Core\\Db\\Type::*" );
-			}
 		}
 
 		/**

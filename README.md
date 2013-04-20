@@ -5,7 +5,7 @@ Lightweight, easy to use and fast progress with your projects.
 Quick start
 -----------
 
-1.   Publish Ninja-folder to your favourite webserver with PHP installed.
+1.  Publish Ninja-folder to your favourite webserver with PHP installed.
 2. 	Edit /core/settings.php
 3. 	Point your webserver root to /public
 4. 	Now you're ready to use the Ninja framework!
@@ -30,19 +30,32 @@ Models
 
 Basic model example. This is a file named "article.php" and placed in /model/article/ directory. It also uses a database column called "title":
 
-	namespace Model\Article;
+	namespace Model\Test;
 
-	use Core\Model\Model, Core\Db\Type;
+	use Core\Db\Type;
+	use Core\Model\Model;
 
 	class Article extends Model
 	{
 		public function __construct()
 		{
-			$this->Add( Type::String, "title", 255 );
+			parent::__construct();
+
+			$this->Field( Type::String, "title", "", array(
+				"length" => 255
+			) );
 		}
 	}
 
-When a model is created and fields are added or changed the /core/sync.php script has to run one time to build the database with its tables. In the example above a database table named "article_article" will be created with a column called "title" in varchar(255).
+When a model is created and fields are added or changed the /core/sync.php script has to run one time to build the database with its tables. In the example above a database table named "article_article" will be created with a column called "title" in varchar(255). All arguments in $this->Field() method are optional.
+
+Arguments in Model::Field() method:
+<dl>
+	<dt>length</dt>
+	<dd>Length will automatically determine the type of your field. The type "String" and no value provided to the length argument will create a field of type text.</dd>
+	<dt>foreign_key</dt>
+	<dd>Example: "Model\Modulename\Classname". This will automatically create a foreign key of your field linked to the ID field of the model you've provided. Using argument asumes your field is of type "Int".</dd>
+</dl>
 
 Database tables are named after the model (modelname_classname). A column named "id" will always be created.
 
@@ -58,6 +71,8 @@ Views
 	<dd>{{REPLACE name}} {{ENDREPLACE}}</dd>
 	<dt>Import another template</dt>
 	<dd>import View\Module\Template</dd>
+	<dt>IF statement</dt>
+	<dd>{{IF name}}{{ENDIF}}</dd>
 </dl>
 
 A basic view example. This view uses the Index view from the Core module and replaces the body variable with a loop and prints the articles from the controller example below.
@@ -79,20 +94,23 @@ Basic controller example. This controller loads all articles created with the mo
 
 	namespace Controller\Article;
 
-	use Core\Controller\Controller, Core\Db\Db, Core\Db\Type;
+	use Core\Controller\Controller;
 
 	class Index extends Controller
 	{
 		public function GetData()
 		{
-			$data = Db::Select( "article_article" )
-				->Field( Type::Int, "id" )
-				->Field( Type::String, "title" )
-				->QueryGetData();
-
 			return array(
 				"title" => "My list of articles",
-				"articles" => $data
+				"articles" => $this->model->QueryGetData()
 			);
 		}
+	}
+
+Use another view template file with your controller: Just change the value of the "$this->view"-parameter to the view you would like to use.
+Example:
+
+	public function __construct()
+	{
+		$this->view = "View\\Core\\Index";
 	}

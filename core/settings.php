@@ -10,7 +10,7 @@
 	/**
 	 * Database server to connect to. "localhost" or IP address.
 	 */
-	define( "ninja_db_server", "" );
+	define( "ninja_db_server", "localhost" );
 
 	/**
 	 * Valid options are: sqlite, mysqli
@@ -26,6 +26,11 @@
 	 * Enables or disables admin. Admin is located at http://www.domain.com/admin
 	 */
 	define( "ninja_enable_admin", false );
+
+	/**
+	 * Enables or disables debug mode.
+	 */
+	define( "ninja_debug_mode", false );
 
 	// Initialize database connection
 	if( ninja_db_server )

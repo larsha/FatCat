@@ -13,7 +13,7 @@
 	}
 
 	/** @var $controller \Core\Controller\Controller */
-	if( ( $controller = Controller::LoadClassFromURI( $_SERVER["REQUEST_URI"] ) ) == FALSE )
+	if( ( $controller = Controller::LoadClassFromURI( $_SERVER["REQUEST_URI"], $_REQUEST ) ) == FALSE )
 	{
 		header("HTTP/1.0 404 Not Found");
 		exit();
@@ -24,4 +24,17 @@
 	$template->SetVars( $controller->GetData() );
 	echo $template->Process();
 
-	echo "\n<!-- Page loaded in: ".round( microtime() - $ms, 5 )." ms -->";
+	echo "\n<!--Page loaded in: ".round( microtime() - $ms, 5 )." ms-->";
+
+	// Print debug data
+	if( ninja_debug_mode )
+	{
+		echo "\nDebug mode is on.\n";
+
+		if( ninja_db_server )
+		{
+			echo "Database queries:\n";
+			foreach( \Core\Db\Connect::Instance()->GetQueries() AS $query )
+				echo $query."\n";
+		}
+	}

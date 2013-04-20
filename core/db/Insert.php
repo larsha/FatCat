@@ -63,7 +63,7 @@
 			{
 				list( $dbType, $field, $value ) = $item;
 
-				$fields[] = $this->ProcessData( $dbType, $value );
+				$fields[] = Type::ProcessInput( $dbType, $value );
 			}
 
 			if( count( $fields ) <= 0 )

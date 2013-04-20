@@ -1,9 +1,11 @@
 <?php
 	namespace Core\Controller;
 
+	use Core\Model\Model;
+
 	abstract class Controller
 	{
-		public static function LoadClassFromURI( $uri )
+		final public static function LoadClassFromURI( $uri, $request )
 		{
 			if( $uri == "/" )
 			{
@@ -11,8 +13,10 @@
 			}
 			else
 			{
+				$url = explode( "?", $_SERVER["REQUEST_URI"] );
+
 				// Get requested url
-				$controller = explode( "/", $_SERVER["REQUEST_URI"] );
+				$controller = explode( "/", $url[0] );
 
 				// Build controller hierarchy
 				$controller[0] = "Controller";
@@ -29,15 +33,31 @@
 				catch( \ErrorException $e ){}
 			}
 
-			return isset( $class ) ? new $class() : FALSE;
+			return isset( $class ) ? new $class( $request ) : FALSE;
 		}
 
+		/** @var $model Model */
+		protected $model;
 		protected $view;
+
+		public function __construct( $args = array() )
+		{
+			list( $catalog, $namespace, $class ) = $this->GetClassHierarchy();
+
+			try
+			{
+				$classname = "Model\\$namespace\\$class";
+
+				if( class_exists( $classname ) )
+					$this->model = new $classname();
+			}
+			catch( \Exception $e ){}
+		}
 
 		/**
 		 * @return string
 		 */
-		public function GetClassHierarchy()
+		final public function GetClassHierarchy()
 		{
 			return explode( "\\", get_called_class() );
 		}
@@ -45,12 +65,9 @@
 		/**
 		 * @return string
 		 */
-		public function GetView()
+		final public function GetView()
 		{
-			if( $this->view )
-				return $this->view;
-
-			list( $catalog, $namespace, $class ) = $this->GetClassHierarchy();
+			list( $catalog, $namespace, $class ) = ( $this->view ) ? explode( "\\", $this->view ) : $this->GetClassHierarchy();
 
 			return ninja_root_dir."view/".strtolower( $namespace )."/".strtolower( $class ).".tpl";
 		}

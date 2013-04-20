@@ -19,6 +19,7 @@
 			return self::$instance;
 		}
 
+		private $queries;
 		private $resource;
 
 		public function Initialize()
@@ -34,10 +35,29 @@
 			}
 		}
 
+		/**
+		 * @param string $query
+		 */
+		public function AddQuery( $query )
+		{
+			$this->queries[] = $query;
+		}
+
+		/**
+		 * @return array
+		 */
+		public function GetQueries()
+		{
+			return $this->queries;
+		}
+
 		public function GetResource()
 		{
 			return $this->resource;
 		}
 
-		private function __construct(){}
+		private function __construct()
+		{
+			$this->queries = array();
+		}
 	}

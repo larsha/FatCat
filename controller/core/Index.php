@@ -1,7 +1,7 @@
 <?php
 	namespace Controller\Core;
 
-	use Core\Controller\Controller, Core\Db\Type;
+	use Core\Controller\Controller;
 
 	class Index extends Controller
 	{
@@ -9,7 +9,7 @@
 		{
 			return array(
 				"title" => "Ninja",
-				"body" => "Light weight, easy to use and fast progress with your projects."
+				"body" => "Lightweight, easy to use and fast progress with your projects."
 			);
 		}
 	}

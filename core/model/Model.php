@@ -1,10 +1,23 @@
 <?php
 	namespace Core\Model;
 
-	class Model
+	use Core\Db\Select;
+	use Core\Db\Type;
+
+	class Model extends Select
 	{
 		protected $id;
-		protected $fields;
+
+		/**
+		 * @param string $table
+		 * @param string $alias
+		 */
+		public function __construct()
+		{
+			parent::__construct( $this->GetTableName() );
+
+			$this->Field( Type::Int, "id" );
+		}
 
 		/**
 		 * @return array
@@ -15,14 +28,20 @@
 		}
 
 		/**
-		 * @param int $type Core\Db\Type
-		 * @param string $name
-		 * @param array $args
-		 * @return $this
+		 * @return string
 		 */
-		protected final function Add( $type, $name, $length, $args = array() )
+		final public function GetClassHierarchy()
 		{
-			$this->fields[] = func_get_args();
-			return $this;
+			return explode( "\\", get_called_class() );
+		}
+
+		/**
+		 * @return string
+		 */
+		final public function GetTableName()
+		{
+			list( $catalog, $namespace, $class ) = $this->GetClassHierarchy();
+
+			return strtolower( $namespace )."_".strtolower( $class );
 		}
 	}
