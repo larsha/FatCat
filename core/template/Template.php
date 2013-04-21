@@ -116,8 +116,16 @@
 			foreach( $data AS $row )
 			{
 				$match = $matches[2];
-				foreach( $row AS $itemKey => $item )
-					$match = str_ireplace( "{{".$matches[1].".".$itemKey."}}", $item, $match );
+
+				if( is_array( $row ) )
+				{
+					foreach( $row AS $itemKey => $item )
+						$match = str_ireplace( "{{".$matches[1].".".$itemKey."}}", $item, $match );
+				}
+				else
+				{
+					$match = str_ireplace( "{{".$matches[1]."}}", $row, $match );
+				}
 
 				$body .= $match;
 			}
