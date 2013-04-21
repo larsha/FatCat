@@ -34,7 +34,7 @@
 			{
 				list( $dbType, $field, $alias ) = $item;
 
-				$sql = $field;
+				$sql = Core::Identifier( $field );
 
 				if( $alias )
 					$sql .= " AS $alias";
@@ -56,7 +56,7 @@
 			{
 				list( $delimiter, $type, $field, $value ) = $where;
 
-				$wheres[] = "$field $delimiter ".Type::ProcessInput( $type, $value );
+				$wheres[] = Core::Identifier( $field )." $delimiter ".Type::ProcessInput( $type, $value );
 			}
 
 			return ( count( $wheres ) > 0 ) ? " WHERE ".implode( " AND ", $wheres ) : "";

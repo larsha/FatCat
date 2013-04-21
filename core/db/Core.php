@@ -3,6 +3,16 @@
 
 	abstract class Core
 	{
+		public static function Identifier( $string )
+		{
+			switch( ninja_db_type )
+			{
+				case "mysqli": 	return "`$string`";
+				case "sqlite": 	return "\"$string\"";
+				default: 		throw new \ErrorException( "Database type is not defined in settings.php." );
+			}
+		}
+
 		protected $table;
 		private $queries;
 
@@ -33,8 +43,9 @@
 
 			switch( ninja_db_type )
 			{
-				case "mysqli":	return mysql_query( $this->ToSQL(), Connect::Instance()->GetResource() ); break;
-				case "sqlite":	return sqlite_query( Connect::Instance()->GetResource(), $this->ToSQL() ); break;
+				case "mysqli":	return mysql_query( $this->ToSQL(), Connect::Instance()->GetResource() );
+				case "sqlite":	return sqlite_query( Connect::Instance()->GetResource(), $this->ToSQL() );
+				default: 		throw new \ErrorException( "Database type is not defined in settings.php." );
 			}
 		}
 

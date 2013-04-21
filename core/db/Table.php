@@ -64,7 +64,7 @@
 			{
 				list( $dbType, $field, $length, $foreignKey ) = $item;
 
-				$sql = $field;
+				$sql = Core::Identifier( $field );
 
 				switch( $dbType )
 				{
@@ -87,7 +87,7 @@
 						/** @var $class Model */
 						$class = new $foreignKey();
 
-						$sql .= ", FOREIGN KEY($field) REFERENCES ".$class->GetTableName()."(id)";
+						$sql .= ", FOREIGN KEY(".Core::Identifier( $field ).") REFERENCES ".Core::Identifier( $class->GetTableName() )."(id)";
 
 						$class->GetTableName();
 					}

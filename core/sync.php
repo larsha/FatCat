@@ -3,6 +3,10 @@
 
 	use Core\Db\Table;
 
+	// No database defined
+	if( !ninja_db_name )
+		throw new ErrorException( "No database defined in settings.php" );
+
 	/**
 	 * @param $resource
 	 * @return array
