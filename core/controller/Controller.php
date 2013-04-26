@@ -7,7 +7,9 @@
 	{
 		final public static function LoadClassFromURI( $uri, $request )
 		{
-			if( $uri == "/" )
+			$url = explode( "?", $_SERVER["REQUEST_URI"] );
+
+			if( $url[0] == "/" )
 			{
 				$class = "Controller\\Core\\Index";
 			}

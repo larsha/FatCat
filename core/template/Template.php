@@ -110,6 +110,8 @@
 		 */
 		private function ReplaceArray( $key, $data )
 		{
+			// TODO: Add support for keys in regexp
+
 			preg_match( "/{{FOR $key AS ([a-z]+)}}(.*?){{ENDFOR}}/is", $this->content, $matches );
 
 			$body = "";

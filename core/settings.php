@@ -8,6 +8,12 @@
 	define( "ninja_root_dir", "" );
 
 	/**
+	 * The base url his Ninja installation is hosting.
+	 * Example: http://www.example.com/
+	 */
+	define( "ninja_site_url", "" );
+
+	/**
 	 * Database server to connect to. "localhost" or IP address.
 	 */
 	define( "ninja_db_server", "localhost" );
@@ -15,7 +21,7 @@
 	/**
 	 * Valid options are: sqlite, mysqli
 	 */
-	define( "ninja_db_type", "sqlite" );
+	define( "ninja_db_type", "" );
 
 	/**
 	 * Database name or, if database is type sqlite, the directory of the database file.
