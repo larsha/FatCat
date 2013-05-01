@@ -18,14 +18,29 @@
 		 */
 		public static function ProcessInput( $type, $value )
 		{
+			// Strings are handled different based on database type
+			if( $type == self::String || $type == self::Text )
+			{
+				switch( ninja_db_type )
+				{
+					case "mysqli": 	return "'".trim( mysql_real_escape_string( $value ) )."'";
+					case "sqlite": 	return "'".trim( sqlite_escape_string( $value ) )."'";
+				}
+			}
+			// Validate date
+			elseif( $type == self::Date )
+			{
+				list( $year, $month, $day ) = explode( "-", $value );
+
+				if( checkdate( $month, $day, $year ) )
+					return "'".$value."'";
+			}
+
 			switch( $type )
 			{
-				case Type::Bool:		return (bool)$value;
-				case Type::Date:		return "'".$value."'"; // TODO: Should this be handled?
-				case Type::DateTime:	return "'".$value."'"; // TODO: Should this be handled?
-				case Type::Int:			return intval( $value );
-				case Type::String:
-				case Type::Text:		return "'".trim( mysql_real_escape_string( $value ) )."'";
+				case self::Bool:		return (bool)$value;
+				case self::DateTime:	return "'".$value."'"; // TODO: Should this be handled?
+				case self::Int:			return intval( $value );
 				default: 				throw new \ErrorException( "Type not found. Use Core\\Db\\Type::*" );
 			}
 		}
@@ -40,12 +55,12 @@
 		{
 			switch( $type )
 			{
-				case Type::Bool: 		return (bool)$value;
-				case Type::Date:		return $value; // TODO: Should this be handled?
-				case Type::DateTime:	return $value; // TODO: Should this be handled?
-				case Type::Int: 		return intval( $value );
-				case Type::String:
-				case Type::Text: 		return htmlentities( $value );
+				case self::Bool: 		return (bool)$value;
+				case self::Date:		return $value;
+				case self::DateTime:	return $value; // TODO: Should this be handled?
+				case self::Int: 		return intval( $value );
+				case self::String:
+				case self::Text: 		return htmlentities( $value );
 				default: 				throw new \ErrorException( "Type not found. Use Core\\Db\\Type::*" );
 			}
 		}
