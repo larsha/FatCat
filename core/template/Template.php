@@ -35,7 +35,8 @@
 			$this->content = file_get_contents( $this->file );
 
 			// Include linked template files
-			$this->IncludeFile();
+			if( $this->IncludeFile() )
+				return $this->content;
 
 			// Loop vars and replace content from file
 			foreach( $this->vars AS $key => $data )
@@ -48,6 +49,9 @@
 					$this->ReplaceString( $key, $data );
 			}
 
+			// Replaces statements
+			$this->ReplaceStatements();
+
 			// Clean up code
 			$this->CleanUp();
 
@@ -56,18 +60,6 @@
 
 		private function CleanUp()
 		{
-			// Remove unused if statements
-			if( preg_match_all( "/{{IF ([a-z]+)}}/is", $this->content, $matches ) )
-			{
-				foreach( $matches[1] AS $key => $match )
-				{
-					if( !array_key_exists( $match, $this->vars ) )
-					{
-						$this->content = preg_replace( "/".$matches[0][$key]."(.*?){{ENDIF}}/is", "", $this->content );
-					}
-				}
-			}
-
 			// Remove unused variables
 			$this->content = preg_replace( "/{{[a-z \.]+}}/is", "", $this->content );
 		}
@@ -90,6 +82,9 @@
 			return $replaces;
 		}
 
+		/**
+		 * @return bool
+		 */
 		private function IncludeFile()
 		{
 			if( preg_match( "/import (View\\\[a-z\\\]+)/is", $this->content, $matches ) )
@@ -101,7 +96,11 @@
 				$template = new Template( "../view/".strtolower( $hierarchy[1] )."/".strtolower( $hierarchy[2] ).".tpl" );
 				$template->SetVars( array_merge( $this->GetReplaces(), $this->vars ) );
 				$this->content = $template->Process();
+
+				return true;
 			}
+
+			return false;
 		}
 
 		/**
@@ -143,6 +142,36 @@
 		{
 			if( $data instanceof Form )
 				$this->content = str_ireplace( "{{".$key."}}", $data->Generate(), $this->content );
+		}
+
+		/**
+		 * @return void
+		 */
+		private function ReplaceStatements()
+		{
+			if( preg_match_all( "/{{IF ([a-z]+)}}(.*?){{ENDIF}}/is", $this->content, $matches ) )
+			{
+				foreach( $matches[2] AS $key => $match )
+				{
+					$items = explode( "{{ELSE}}", $match );
+
+					// No else and var exist
+					if( count( $items ) == 1 && array_key_exists( $matches[1][$key], $this->vars ) )
+					{
+						$this->content = str_ireplace( $matches[0][$key], $items[0], $this->content );
+					}
+					// Else and var exist
+					elseif( array_key_exists( $matches[1][$key], $this->vars ) )
+					{
+						$this->content = str_ireplace( $matches[0][$key], $items[0], $this->content );
+					}
+					// Else and no var exist
+					elseif( !array_key_exists( $matches[1][$key], $this->vars ) )
+					{
+						$this->content = str_ireplace( $matches[0][$key], $items[1], $this->content );
+					}
+				}
+			}
 		}
 
 		/**
