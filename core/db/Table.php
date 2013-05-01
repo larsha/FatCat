@@ -68,10 +68,12 @@
 
 				switch( $dbType )
 				{
-					case Type::Int:		$sql .= " INTEGER"; break;
-					case Type::Bool:	$sql .= " BOOLEAN"; break;
-					case Type::String:	$sql .= " VARCHAR($length)"; break;
-					case Type::Text:	$sql .= " TEXT"; break;
+					case Type::Int:			$sql .= " INTEGER"; break;
+					case Type::Bool:		$sql .= " BOOLEAN"; break;
+					case Type::String:		$sql .= " VARCHAR($length)"; break;
+					case Type::Text:		$sql .= " TEXT"; break;
+					case Type::Date:		$sql .= " DATE"; break;
+					case Type::DateTime:	$sql .= " DATETIME"; break;
 					default: 			throw new \ErrorException( "Type not found in Core\\Db\\Table." );
 				}
 

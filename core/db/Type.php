@@ -21,8 +21,8 @@
 			switch( $type )
 			{
 				case Type::Bool:		return (bool)$value;
-				case Type::Date:		return $value; // TODO: Should this be handled?
-				case Type::DateTime:	return $value; // TODO: Should this be handled?
+				case Type::Date:		return "'".$value."'"; // TODO: Should this be handled?
+				case Type::DateTime:	return "'".$value."'"; // TODO: Should this be handled?
 				case Type::Int:			return intval( $value );
 				case Type::String:
 				case Type::Text:		return "'".trim( mysql_real_escape_string( $value ) )."'";

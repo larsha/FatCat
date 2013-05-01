@@ -14,11 +14,11 @@
 
 			$sql .= $this->GenerateWhere();
 
-			if( $this->limit > 0 )
-				$sql .= " LIMIT ".$this->limit;
-
 			if( count( $this->order ) == 2 )
 				$sql .= " ORDER BY ".$this->order[0].( $this->order[1] ? " DESC" : " ASC" );
+
+			if( $this->limit > 0 )
+				$sql .= " LIMIT ".$this->limit;
 
 			return $sql;
 		}
@@ -34,7 +34,7 @@
 			{
 				list( $dbType, $field, $alias ) = $item;
 
-				$sql = Core::Identifier( $field );
+				$sql = $field;
 
 				if( $alias )
 					$sql .= " AS $alias";
@@ -56,7 +56,7 @@
 			{
 				list( $delimiter, $type, $field, $value ) = $where;
 
-				$wheres[] = Core::Identifier( $field )." $delimiter ".Type::ProcessInput( $type, $value );
+				$wheres[] = $field." $delimiter ".Type::ProcessInput( $type, $value );
 			}
 
 			return ( count( $wheres ) > 0 ) ? " WHERE ".implode( " AND ", $wheres ) : "";
