@@ -73,6 +73,8 @@ Views
 	<dd>import View\Module\Template</dd>
 	<dt>IF statement</dt>
 	<dd>{{IF name}}{{ENDIF}}</dd>
+	<dt>IF/ELSE statement</dt>
+	<dd>{{IF name}} {{ELSE}} {{ENDIF}}</dd>
 </dl>
 
 A basic view example. This view uses the Index view from the Core module and replaces the body variable with a loop and prints the articles from the controller example below.
