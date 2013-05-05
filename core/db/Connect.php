@@ -26,8 +26,8 @@
 		{
 			switch( ninja_db_type )
 			{
-				case "mysqli":	$this->resource = mysql_connect( ninja_db_server, "", "" );
-								mysql_select_db( ninja_db_name, $this->resource ); break;
+				case "mysqli":	$this->resource = mysqli_connect( ninja_db_server, ninja_db_user, ninja_db_password );
+								mysqli_select_db( $this->resource, ninja_db_name ); break;
 
 				case "sqlite": 	$this->resource = sqlite_open( ninja_db_name, 0666, $error ); break;
 

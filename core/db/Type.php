@@ -23,7 +23,7 @@
 			{
 				switch( ninja_db_type )
 				{
-					case "mysqli": 	return "'".trim( mysql_real_escape_string( $value ) )."'";
+					case "mysqli": 	return "'".trim( mysqli_real_escape_string( Connect::Instance()->GetResource(), $value ) )."'";
 					case "sqlite": 	return "'".trim( sqlite_escape_string( $value ) )."'";
 				}
 			}
