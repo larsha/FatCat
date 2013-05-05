@@ -10,6 +10,8 @@
 		const Date 		= 5;
 		const DateTime 	= 6;
 
+		const Raw 		= 99;
+
 		/**
 		 * @param int $type Type::*
 		 * @param mixed $value
@@ -41,6 +43,7 @@
 				case self::Bool:		return (bool)$value;
 				case self::DateTime:	return "'".$value."'"; // TODO: Should this be handled?
 				case self::Int:			return intval( $value );
+				case self::Raw:			return $value;
 				default: 				throw new \ErrorException( "Type not found. Use Core\\Db\\Type::*" );
 			}
 		}
@@ -61,6 +64,7 @@
 				case self::Int: 		return intval( $value );
 				case self::String:
 				case self::Text: 		return htmlentities( $value );
+				case self::Raw: 		return $value;
 				default: 				throw new \ErrorException( "Type not found. Use Core\\Db\\Type::*" );
 			}
 		}

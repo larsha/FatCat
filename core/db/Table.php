@@ -11,11 +11,26 @@
 		 */
 		public static function Exists( $table )
 		{
-			$data = Db::Select( "sqlite_master" )
-					->Field( Type::String, "name" )
-					->WhereEquals( Type::String, "type", "table" )
-					->WhereEquals( Type::String, "name", $table )
-					->QueryGetData();
+			if( ninja_db_type == "mysqli" )
+			{
+				$data = Db::Select( "information_schema.tables" )
+						->Field( Type::Raw, "COUNT(*)" )
+						->WhereEquals( Type::String, "table_schema", ninja_db_name )
+						->WhereEquals( Type::String, "table_name", $table )
+						->QueryGetValue();
+
+				return ( $data > 0 ) ? True : False;
+			}
+			elseif( ninja_db_type == "mysqli" )
+			{
+				$data = Db::Select( "sqlite_master" )
+						->Field( Type::String, "name" )
+						->WhereEquals( Type::String, "type", "table" )
+						->WhereEquals( Type::String, "name", $table )
+						->QueryGetData();
+			}
+			else
+				throw new \ErrorException( "Database type doesn't exists." );
 
 			return ( count( $data ) > 0 ) ? True : False;
 		}

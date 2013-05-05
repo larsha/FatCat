@@ -66,7 +66,43 @@
 			return $this;
 		}
 
-		public function QueryArray()
+		/**
+		 * @return array
+		 */
+		public function QueryGetData()
+		{
+			$data = array();
+			foreach( $this->QueryAssoc() AS $key => $row )
+			{
+				foreach( $this->fields AS $field )
+				{
+					list( $type, $name ) = $field;
+
+					if( array_key_exists( $name, $row ) )
+					{
+						$data[$key][$name] = Type::ProcessOutput( $type, $row[$name] );
+					}
+				}
+			}
+
+			return $data;
+		}
+
+		/**
+		 * @return mixed
+		 */
+		public function QueryGetValue()
+		{
+			$data = $this->QueryGetData();
+
+			if( count( $data ) > 0 )
+				foreach( $data[0] AS $column )
+					return $column;
+
+			return NULL;
+		}
+
+		private function QueryArray()
 		{
 			$data = array();
 			$resource = $this->Query();
@@ -85,7 +121,7 @@
 			return $data;
 		}
 
-		public function QueryAssoc()
+		private function QueryAssoc()
 		{
 			$data = array();
 			$resource = $this->Query();
@@ -99,28 +135,6 @@
 			{
 				while( $row = sqlite_fetch_array( $resource, SQLITE_ASSOC ) )
 					$data[] = $row;
-			}
-
-			return $data;
-		}
-
-		/**
-		 * @return array
-		 */
-		public function QueryGetData()
-		{
-			$data = array();
-			foreach( $this->QueryAssoc() AS $key => $row )
-			{
-				foreach( $this->fields AS $field )
-				{
-					list( $type, $name ) = $field;
-
-					if( array_key_exists( $name, $row ) )
-					{
-						$data[$key][$name] = Type::ProcessOutput( $type, $row[$name] );
-					}
-				}
 			}
 
 			return $data;
