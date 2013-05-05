@@ -29,6 +29,16 @@
 	define( "ninja_db_name", "" );
 
 	/**
+	 * The user to connect to database with (not used with "sqlite").
+	 */
+	define( "ninja_db_user", "" );
+
+	/**
+	 * The password to connect to database with (not used with "sqlite").
+	 */
+	define( "ninja_db_password", "" );
+
+	/**
 	 * Enables or disables admin. Admin is located at http://www.domain.com/admin
 	 */
 	define( "ninja_enable_admin", false );
