@@ -41,12 +41,24 @@
 			// Loop vars and replace content from file
 			foreach( $this->vars AS $key => $data )
 			{
+				// Replace arrays
 				if( is_array( $data ) )
-					$this->ReplaceArray( $key, $data );
+				{
+					if( $this->IsMultidimensionalArray( $data ) )
+						$this->ReplaceMultidimensionalArray( $key, $data );
+					else
+						$this->ReplaceArray( $key, $data );
+				}
+				// Replace objects
 				elseif( is_object( $data ) )
+				{
 					$this->ReplaceObject( $key, $data );
+				}
+				// Replace strings
 				else
+				{
 					$this->ReplaceString( $key, $data );
+				}
 			}
 
 			// Replaces statements
@@ -107,10 +119,18 @@
 		 * @param string $key
 		 * @param array $data
 		 */
-		private function ReplaceArray( $key, $data )
+		private function ReplaceArray( $key, array $data )
 		{
-			// TODO: Add support for keys in regexp
+			foreach( $data AS $itemKey => $item )
+				$this->content = str_ireplace( "{{".$key.".".$itemKey."}}", $item, $this->content );
+		}
 
+		/**
+		 * @param string $key
+		 * @param array $data
+		 */
+		private function ReplaceMultidimensionalArray( $key, array $data )
+		{
 			preg_match( "/{{FOR $key AS ([a-z]+)}}(.*?){{ENDFOR}}/is", $this->content, $matches );
 
 			$body = "";
@@ -181,5 +201,18 @@
 		private function ReplaceString( $key, $data )
 		{
 			$this->content = str_ireplace( "{{".$key."}}", $data, $this->content );
+		}
+
+		/**
+		 * @param array $array
+		 * @return bool
+		 */
+		private function IsMultidimensionalArray( array $array )
+		{
+			foreach( $array AS $item )
+				if( is_array( $item ) )
+					return true;
+
+			return false;
 		}
 	}

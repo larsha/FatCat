@@ -65,7 +65,9 @@ Views
 <dl>
 	<dt>Variables</dt>
 	<dd>{{name}}</dd>
-	<dt>Loop</dt>
+	<dt>One dimensional arrays</dt>
+	<dd>{{name.key}}</dd>
+	<dt>Loop multidimensional arrays</dt>
 	<dd>{{FOR items AS item}} {{ENDFOR}}</dd>
 	<dt>Replace variable</dt>
 	<dd>{{REPLACE name}} {{ENDREPLACE}}</dd>
