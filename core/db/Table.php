@@ -81,6 +81,15 @@
 
 				$sql = Core::Identifier( $field );
 
+				if( $length <= 0 )
+				{
+					switch( $dbType )
+					{
+						case Type::Int:			$length = 11; break;
+						case Type::String:		$length = 255; break;
+					}
+				}
+
 				switch( $dbType )
 				{
 					case Type::Int:			$sql .= " INTEGER"; break;
