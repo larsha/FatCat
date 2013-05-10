@@ -114,8 +114,6 @@
 						$class = new $foreignKey();
 
 						$sql .= ", FOREIGN KEY(".Core::Identifier( $field ).") REFERENCES ".Core::Identifier( $class->GetTableName() )."(id)";
-
-						$class->GetTableName();
 					}
 					catch( \Exception $e ){}
 				}

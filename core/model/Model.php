@@ -41,7 +41,7 @@
 		 */
 		public function __construct()
 		{
-			parent::__construct( $this->GetTableName() );
+			parent::__construct( self::GetTableName() );
 
 			$this->Field( Type::Int, "id" );
 		}
@@ -57,7 +57,7 @@
 		/**
 		 * @return string
 		 */
-		final public function GetClassHierarchy()
+		final public static function GetClassHierarchy()
 		{
 			return explode( "\\", get_called_class() );
 		}
@@ -65,9 +65,9 @@
 		/**
 		 * @return string
 		 */
-		final public function GetTableName()
+		final public static function GetTableName()
 		{
-			list( $catalog, $namespace, $class ) = $this->GetClassHierarchy();
+			list( $catalog, $namespace, $class ) = self::GetClassHierarchy();
 
 			return strtolower( $namespace )."_".strtolower( $class );
 		}
