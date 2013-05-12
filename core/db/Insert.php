@@ -28,6 +28,12 @@
 			return $this;
 		}
 
+		public function Save()
+		{
+			$this->Debug(); exit();
+			$this->Query();
+		}
+
 		/**
 		 * @return string
 		 */

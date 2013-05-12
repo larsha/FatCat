@@ -63,7 +63,7 @@
 			// Loop models fields
 			foreach( $instance->Fields() AS $field )
 			{
-				list( $type, $name, $alias, $args ) = $field;
+				list( $type, $name, $args ) = $field;
 
 				$length = isset( $args["length"] ) ? $args["length"] : 0;
 				$foreignKey = isset( $args["foreign_key"] ) ? $args["foreign_key"] : "";

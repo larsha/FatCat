@@ -43,10 +43,15 @@
 
 			switch( ninja_db_type )
 			{
-				case "mysqli":	return mysqli_query( Connect::Instance()->GetResource(), $this->ToSQL() );
-				case "sqlite":	return sqlite_query( Connect::Instance()->GetResource(), $this->ToSQL() );
+				case "mysqli":	$resource = mysqli_query( Connect::Instance()->GetResource(), $this->ToSQL() ) or die( mysqli_error( Connect::Instance()->GetResource() ) ); break;
+				case "sqlite":	$resource = sqlite_query( Connect::Instance()->GetResource(), $this->ToSQL() ); break;
 				default: 		throw new \ErrorException( "Database type is not defined in settings.php." );
 			}
+
+			if( is_bool( $resource ) )
+				throw new \ErrorException( "Something went wrong with the database query. Check logs for info." );
+
+			return $resource;
 		}
 
 		/**

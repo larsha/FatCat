@@ -28,7 +28,7 @@
 
 			foreach( $this->model->Fields() AS $field )
 			{
-				list( $type, $name, $alias, $args ) = $field;
+				list( $type, $name, $args ) = $field;
 
 				$length = isset( $args["length"] ) ? $args["length"] : 0;
 

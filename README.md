@@ -41,7 +41,7 @@ Basic model example. This is a file named "article.php" and placed in /model/art
 		{
 			parent::__construct();
 
-			$this->Field( Type::String, "title", "", array(
+			$this->Field( Type::String, "title", array(
 				"length" => 255
 			) );
 		}

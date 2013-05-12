@@ -1,10 +1,11 @@
 <?php
 	namespace Core\Model;
 
+	use Core\Db\Insert;
 	use Core\Db\Select;
 	use Core\Db\Type;
 
-	class Model extends Select
+	class Model
 	{
 		public static function GetModelsHierarchy()
 		{
@@ -33,7 +34,10 @@
 			return listModels( ninja_root_dir."model" );
 		}
 
+		private $fields;
 		protected $id;
+		public $insert;
+		public $select;
 
 		/**
 		 * @param string $table
@@ -41,7 +45,10 @@
 		 */
 		public function __construct()
 		{
-			parent::__construct( self::GetTableName() );
+			$this->fields = array();
+
+			$this->select = new Select( self::GetTableName() );
+			$this->insert = new Insert( self::GetTableName() );
 
 			$this->Field( Type::Int, "id" );
 		}
@@ -57,7 +64,7 @@
 		/**
 		 * @return string
 		 */
-		final public static function GetClassHierarchy()
+		public final static function GetClassHierarchy()
 		{
 			return explode( "\\", get_called_class() );
 		}
@@ -65,10 +72,17 @@
 		/**
 		 * @return string
 		 */
-		final public static function GetTableName()
+		public final static function GetTableName()
 		{
 			list( $catalog, $namespace, $class ) = self::GetClassHierarchy();
 
 			return strtolower( $namespace )."_".strtolower( $class );
+		}
+
+		protected final function Field( $type, $field, $args = NULL )
+		{
+			$this->fields[] = array( $type, $field, $args );
+			$this->insert->Field( $type, $field, $args );
+			$this->select->Field( $type, $field, "", $args );
 		}
 	}
