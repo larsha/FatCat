@@ -54,6 +54,18 @@
 		}
 
 		/**
+		 * @param int $type
+		 * @param mixed $field
+		 * @param mixed $args
+		 */
+		public final function Field( $type, $field, $args = NULL )
+		{
+			$this->fields[] = array( $type, $field, $args );
+			$this->insert->Field( $type, $field, $args );
+			$this->select->Field( $type, $field, "", $args );
+		}
+
+		/**
 		 * @return array
 		 */
 		public final function Fields()
@@ -77,12 +89,5 @@
 			list( $catalog, $namespace, $class ) = self::GetClassHierarchy();
 
 			return strtolower( $namespace )."_".strtolower( $class );
-		}
-
-		protected final function Field( $type, $field, $args = NULL )
-		{
-			$this->fields[] = array( $type, $field, $args );
-			$this->insert->Field( $type, $field, $args );
-			$this->select->Field( $type, $field, "", $args );
 		}
 	}
