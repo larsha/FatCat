@@ -15,8 +15,6 @@
 			}
 			else
 			{
-				$url = explode( "?", $_SERVER["REQUEST_URI"] );
-
 				// Get requested url
 				$controller = explode( "/", $url[0] );
 

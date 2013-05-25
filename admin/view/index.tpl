@@ -10,14 +10,25 @@
 			ul.sidenav
 			{
 				top: 40px;
+				left: 20px;
 			}
 		</style>
 	</head>
 	<body>
-		<ul class="nav nav-list affix sidenav">
-			{{FOR menu AS item}}
+		<ul class="nav nav-tabs nav-stacked affix sidenav">
+			<li>
+				<a href="/admin">Start</a>
+			</li>
+			{{FOR menu AS key => items}}
 				<li>
-					<a href="">{{item}}</a>
+					{{key}}
+					<ul class="nav nav-tabs nav-stacked">
+						{{FOR items AS item}}
+							<li>
+								<a href="{{item.url}}">{{item.title}}</a>
+							</li>
+						{{ENDFOR}}
+					</ul>
 				</li>
 			{{ENDFOR}}
 		</ul>

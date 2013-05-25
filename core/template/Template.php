@@ -44,9 +44,7 @@
 				// Replace arrays
 				if( is_array( $data ) )
 				{
-					if( $this->IsMultidimensionalArray( $data ) )
-						$this->ReplaceMultidimensionalArray( $key, $data );
-					else
+					if( !$this->IsMultidimensionalArray( $data ) )
 						$this->ReplaceArray( $key, $data );
 				}
 				// Replace objects
@@ -61,6 +59,8 @@
 				}
 			}
 
+			$this->ReplaceMultidimensionalArray();
+
 			// Replaces statements
 			$this->ReplaceStatements();
 
@@ -73,7 +73,7 @@
 		private function CleanUp()
 		{
 			// Remove unused variables
-			$this->content = preg_replace( "/{{[a-z \.]+}}/is", "", $this->content );
+			$this->content = preg_replace( "/{{[a-z \.=>]+}}/is", "", $this->content );
 		}
 
 		/**
@@ -99,13 +99,15 @@
 		 */
 		private function IncludeFile()
 		{
-			if( preg_match( "/import (View\\\[a-z\\\]+)/is", $this->content, $matches ) )
+			if( preg_match( "/import (View\\\[a-z\\\]+)|(\"(.+\.tpl)\")/is", $this->content, $matches ) )
 			{
 				// Get class hierarchy
 				$hierarchy = explode( "\\", $matches[1] );
 
+				$file = ( isset( $matches[3] ) ) ? $matches[3] : "../view/".strtolower( $hierarchy[1] )."/".strtolower( $hierarchy[2] ).".tpl";
+
 				// Process template
-				$template = new Template( "../view/".strtolower( $hierarchy[1] )."/".strtolower( $hierarchy[2] ).".tpl" );
+				$template = new Template( $file );
 				$template->SetVars( array_merge( $this->GetReplaces(), $this->vars ) );
 				$this->content = $template->Process();
 
@@ -129,29 +131,46 @@
 		 * @param string $key
 		 * @param array $data
 		 */
-		private function ReplaceMultidimensionalArray( $key, array $data )
+		private function ReplaceMultidimensionalArray()
 		{
-			preg_match( "/{{FOR $key AS ([a-z]+)}}(.*?){{ENDFOR}}/is", $this->content, $matches );
+			$re = '% # Match outermost {{FOR}}...{{ENDFOR}} structure.
+				{{FOR\ ([a-z]+)\ AS\ ([a-z]+)}}              # Literal start tag.
+				(                  # $1: Element contents.
+				  (?:              # Zero or more contents alternatives.
+					[^{{]*          # Either non-[b]...[/b] stuff...
+					(?:            # Begin {(special normal*)*}.
+					  {{           # {special} Tag open literal char,
+					  (?!ENDFOR|FOR\ [a-z]+\ AS\ [a-z]+}})    # but only if NOT [b] or [/b].
+					  [^{{]*        # More {normal*}.
+					)*             # Finish {(special normal*)*}.
+				  | (?R)           # Or a nested [b]...[/b] structure.
+				  )*               # Zero or more contents alternatives.
+				)                  # $1: Element contents.
+				{{ENDFOR}}            # Literal end tag.
+			%x';
 
-			$body = "";
-			foreach( $data AS $row )
+			if( !preg_match_all( $re, $this->content, $matches ) )
+				return;
+
+			foreach( $matches[1] AS $i => $key )
 			{
-				$match = $matches[2];
+				if( !array_key_exists( $key, $this->vars ) )
+					continue;
 
-				if( is_array( $row ) )
+				$content = "";
+				$replace = array();
+
+				foreach( $this->vars[$key] AS $j => $vars )
 				{
-					foreach( $row AS $itemKey => $item )
-						$match = str_ireplace( "{{".$matches[1].".".$itemKey."}}", $item, $match );
-				}
-				else
-				{
-					$match = str_ireplace( "{{".$matches[1]."}}", $row, $match );
+					$replace[$j] = $matches[3][$i];
+
+					if( is_array( $vars ) )
+						foreach( $vars AS $varKey => $var )
+							$replace[$j] = str_ireplace( "{{".$matches[2][$i].".".$varKey."}}", $var, $replace[$j] );
 				}
 
-				$body .= $match;
+				$this->content = str_replace( $matches[0][$i], implode( "", $replace ), $this->content );
 			}
-
-			$this->content = str_replace( $matches[0], $body, $this->content );
 		}
 
 		/**

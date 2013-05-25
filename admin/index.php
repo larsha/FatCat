@@ -6,6 +6,7 @@
 	use Core\Template\Template;
 	use Core\Model\Model;
 
+	// Build menu
 	$menu = array();
 	foreach( Model::GetModelsHierarchy() AS $module => $files )
 	{
@@ -13,28 +14,60 @@
 		{
 			try
 			{
-				$classname = "Model\\$module\\".str_replace( ".php", "", $file );
+				$classname = "Model\\$module\\$file";
 
 				/** @var $class Model */
 				$class = new $classname();
 				$hierarchy = $class->GetClassHierarchy();
 
-				$menu[$hierarchy[1]][] = $hierarchy[2];
+				$menu[$hierarchy[1]][] = array(
+					"title" => $hierarchy[2],
+					"url" => "/admin/$module/".strtolower( $hierarchy[2] )."/"
+				);
 			}
 			catch( Exception $e ){}
 		}
 	}
 
-	print_r($menu);
+	// Load model
+	$url = explode( "?", $_SERVER["REQUEST_URI"] );
+	$query = NULL;
+
+	if( $url[0] == "/" )
+	{
+		$templateFile = "index.tpl";
+	}
+	else
+	{
+		$templateFile = "data.tpl";
+
+		// Get requested url
+		$model = explode( "/", $url[0] );
+
+		try
+		{
+			$classname = "Model\\$model[2]\\$model[3]";
+
+			/** @var $class Model */
+			$class = new $classname();
+
+			if( $class instanceof Model )
+				$query = $class->select->QueryGetData();
+		}
+		catch( Exception $e ){}
+	}
 
 	$data = array(
 		"title" => "Admin",
-		"body" => "This is the admin directory.",
-		"menu" => $menu
+		"menu" => $menu,
+		//"data" => $query
 	);
 
+	//if( !$query )
+	//	$data["body"] = "This is the admin directory.";
+
 	// Process template
-	$template = new Template( ninja_root_dir."admin/view/index.tpl" );
+	$template = new Template( ninja_root_dir."admin/view/$templateFile" );
 	$template->SetVars( $data );
 	echo $template->Process();
 

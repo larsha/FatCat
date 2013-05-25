@@ -24,7 +24,7 @@
 							listModels( $path."/".$dir, $hierarchy, $dir );
 						}
 						else
-							$hierarchy[$folder][] = $dir;
+							$hierarchy[$folder][] = str_replace( ".php", "", $dir );
 					}
 
 					return $hierarchy;
