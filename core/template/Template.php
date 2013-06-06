@@ -59,7 +59,7 @@
 				}
 			}
 
-			$this->ReplaceMultidimensionalArray();
+			$this->ReplaceMultidimensionalArray( $this->content );
 
 			// Replaces statements
 			$this->ReplaceStatements();
@@ -128,48 +128,67 @@
 		}
 
 		/**
-		 * @param string $key
-		 * @param array $data
+		 * @param string $content
+		 * @return bool|array
 		 */
-		private function ReplaceMultidimensionalArray()
+		private function MatchArray( $content )
 		{
 			$re = '% # Match outermost {{FOR}}...{{ENDFOR}} structure.
-				{{FOR\ ([a-z]+)\ AS\ ([a-z]+)}}              # Literal start tag.
+				{{FOR\ ([a-z]+)\ AS\ (([a-z]+)\ =>\ )?([a-z]+)}}              # Literal start tag.
 				(                  # $1: Element contents.
 				  (?:              # Zero or more contents alternatives.
-					[^{{]*          # Either non-[b]...[/b] stuff...
+					[^{{]*          # Either non-{{FOR}}...{{ENDFOR}} stuff...
 					(?:            # Begin {(special normal*)*}.
 					  {{           # {special} Tag open literal char,
-					  (?!ENDFOR|FOR\ [a-z]+\ AS\ [a-z]+}})    # but only if NOT [b] or [/b].
+					  (?!ENDFOR|FOR\ [a-z]+\ AS\ ([a-z]+ =>\ )?[a-z]+}})    # but only if NOT {{FOR}} or {{ENDFOR}}.
 					  [^{{]*        # More {normal*}.
 					)*             # Finish {(special normal*)*}.
-				  | (?R)           # Or a nested [b]...[/b] structure.
+				  | (?R)           # Or a nested {{FOR}}...{{ENDFOR}} structure.
 				  )*               # Zero or more contents alternatives.
 				)                  # $1: Element contents.
 				{{ENDFOR}}            # Literal end tag.
 			%x';
 
-			if( !preg_match_all( $re, $this->content, $matches ) )
-				return;
+			if( !preg_match_all( $re, $content, $matches ) )
+				return false;
 
-			foreach( $matches[1] AS $i => $key )
+			return $matches;
+		}
+
+		/**
+		 * @param string $content
+		 */
+		private function ReplaceMultidimensionalArray( $content )
+		{
+			if( $matches = $this->MatchArray( $content ) )
 			{
-				if( !array_key_exists( $key, $this->vars ) )
-					continue;
-
-				$content = "";
-				$replace = array();
-
-				foreach( $this->vars[$key] AS $j => $vars )
+				foreach( $matches[5] AS $i => $text )
 				{
-					$replace[$j] = $matches[3][$i];
+					$key = $matches[1][$i];
 
-					if( is_array( $vars ) )
-						foreach( $vars AS $varKey => $var )
-							$replace[$j] = str_ireplace( "{{".$matches[2][$i].".".$varKey."}}", $var, $replace[$j] );
+					if( array_key_exists( $key, $this->vars ) )
+					{
+						$body = "";
+
+						if( is_array( $this->vars[$key] ) )
+						{
+							foreach( $this->vars[$key] AS $items )
+							{
+								$replace = $text;
+								foreach( $items AS $itemKey => $value )
+									$replace = str_ireplace( "{{".$matches[4][$i].".".$itemKey."}}", $value, $replace );
+
+								$body .= $replace;
+							}
+						}
+						else
+							$this->ReplaceString( $key, $this->vars[$key] );
+
+						$this->content = str_ireplace( $matches[0][$i], $body, $this->content );
+					}
+
+					$this->ReplaceMultidimensionalArray( $text );
 				}
-
-				$this->content = str_replace( $matches[0][$i], implode( "", $replace ), $this->content );
 			}
 		}
 
