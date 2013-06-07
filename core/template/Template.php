@@ -158,12 +158,13 @@
 		/**
 		 * @param string $content
 		 */
-		private function ReplaceMultidimensionalArray( $content )
+		private function ReplaceMultidimensionalArray( $content, $var = "" )
 		{
 			if( $matches = $this->MatchArray( $content ) )
 			{
 				foreach( $matches[5] AS $i => $text )
 				{
+					$var = ( preg_match( "/{{([\w]+)}}.+{{ENDFOR}}/s", $text, $vars ) ) ? $vars[1] : "";
 					$key = $matches[1][$i];
 
 					if( array_key_exists( $key, $this->vars ) )
@@ -176,7 +177,14 @@
 							{
 								$replace = $text;
 								foreach( $items AS $itemKey => $value )
-									$replace = str_ireplace( "{{".$matches[4][$i].".".$itemKey."}}", $value, $replace );
+								{
+									if( $var )
+									{
+										$replace .= str_ireplace( "{{".$var."}}", $value, $text );
+									}
+									else
+										$replace = preg_replace( "/{{(".$matches[4][$i].".)?".$itemKey."}}/", $value, $replace );
+								}
 
 								$body .= $replace;
 							}
@@ -187,7 +195,7 @@
 						$this->content = str_ireplace( $matches[0][$i], $body, $this->content );
 					}
 
-					$this->ReplaceMultidimensionalArray( $text );
+					$this->ReplaceMultidimensionalArray( $text, $var );
 				}
 			}
 		}
