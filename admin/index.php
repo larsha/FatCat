@@ -63,8 +63,8 @@
 		"data" => $query
 	);
 
-	//if( !$query )
-	//	$data["body"] = "This is the admin directory.";
+	if( !$query )
+		$data["body"] = "This is the admin directory.";
 
 	// Process template
 	$template = new Template( $controller->GetView() );
