@@ -33,13 +33,13 @@
 	$url = explode( "?", $_SERVER["REQUEST_URI"] );
 	$query = NULL;
 
-	if( $url[0] == "/" )
+	if( $url[0] == "/admin" )
 	{
-		$templateFile = "index.tpl";
+		$controller = new \Controller\Core\Admin();
 	}
 	else
 	{
-		$templateFile = "data.tpl";
+		$controller = new \Controller\Core\Data();
 
 		// Get requested url
 		$model = explode( "/", $url[0] );
@@ -60,14 +60,14 @@
 	$data = array(
 		"title" => "Admin",
 		"menu" => $menu,
-		//"data" => $query
+		"data" => $query
 	);
 
 	//if( !$query )
 	//	$data["body"] = "This is the admin directory.";
 
 	// Process template
-	$template = new Template( ninja_root_dir."admin/view/$templateFile" );
+	$template = new Template( $controller->GetView() );
 	$template->SetVars( $data );
 	echo $template->Process();
 
