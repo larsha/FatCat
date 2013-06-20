@@ -14,9 +14,9 @@
 				<p class="lead">
 					{{body}}
 				</p>
-				<h2>Introducing PHP Ninja framework.</h2>
+				<h2>Introducing PHP Fat Cat framework.</h2>
 				<p class="lead">
-					Three reasons to use the Ninja framework.
+					Three reasons to use the Fat Cat framework.
 				</p>
 			</div>
 			<div class="row-fluid">

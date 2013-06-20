@@ -6,7 +6,7 @@
 	use Core\Template\Template, Core\Controller\Controller;
 
 	// Load admin
-	if( substr( $_SERVER["REQUEST_URI"], 1, 5 ) == "admin" && ninja_enable_admin )
+	if( substr( $_SERVER["REQUEST_URI"], 1, 5 ) == "admin" && fatcat_enable_admin )
 	{
 		require_once( "../admin/index.php" );
 		exit();
@@ -27,11 +27,11 @@
 	echo "\n<!--Page loaded in: ".round( microtime() - $ms, 5 )." ms-->";
 
 	// Print debug data
-	if( ninja_debug_mode )
+	if( fatcat_debug_mode )
 	{
 		echo "\nDebug mode is on.\n";
 
-		if( ninja_db_server )
+		if( fatcat_db_server )
 		{
 			echo "Database queries:\n";
 			foreach( \Core\Db\Connect::Instance()->GetQueries() AS $query )

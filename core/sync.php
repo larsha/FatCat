@@ -4,7 +4,7 @@
 	use Core\Db\Table;
 
 	// No database defined
-	if( !ninja_db_name )
+	if( !fatcat_db_name )
 		throw new ErrorException( "No database defined in settings.php" );
 
 	/**
@@ -30,7 +30,7 @@
 	}
 
 	// Get all model dirs
-	$root = ninja_root_dir."model";
+	$root = fatcat_root_dir."model";
 
 	$models = getContents( opendir( $root ) );
 

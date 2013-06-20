@@ -31,7 +31,7 @@
 				}
 			}
 
-			return listModels( ninja_root_dir."model" );
+			return listModels( fatcat_root_dir."model" );
 		}
 
 		private $fields;

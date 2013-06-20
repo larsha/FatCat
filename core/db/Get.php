@@ -107,7 +107,7 @@
 			$data = array();
 			$resource = $this->Query();
 
-			if( ninja_db_type == "mysqli" )
+			if( fatcat_db_type == "mysqli" )
 			{
 				while( $row = mysqli_fetch_array( $resource ) )
 					$data[] = $row;
@@ -126,7 +126,7 @@
 			$data = array();
 			$resource = $this->Query();
 
-			if( ninja_db_type == "mysqli" )
+			if( fatcat_db_type == "mysqli" )
 			{
 				while( $row = mysqli_fetch_assoc( $resource ) )
 					$data[] = $row;

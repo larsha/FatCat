@@ -11,17 +11,17 @@
 		 */
 		public static function Exists( $table )
 		{
-			if( ninja_db_type == "mysqli" )
+			if( fatcat_db_type == "mysqli" )
 			{
 				$data = Db::Select( "information_schema.tables" )
 						->Field( Type::Raw, "COUNT(*)" )
-						->WhereEquals( Type::String, "table_schema", ninja_db_name )
+						->WhereEquals( Type::String, "table_schema", fatcat_db_name )
 						->WhereEquals( Type::String, "table_name", $table )
 						->QueryGetValue();
 
 				return ( $data > 0 ) ? True : False;
 			}
-			elseif( ninja_db_type == "mysqli" )
+			elseif( fatcat_db_type == "mysqli" )
 			{
 				$data = Db::Select( "sqlite_master" )
 						->Field( Type::String, "name" )

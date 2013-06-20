@@ -23,7 +23,7 @@
 			// Strings are handled different based on database type
 			if( $type == self::String || $type == self::Text )
 			{
-				switch( ninja_db_type )
+				switch( fatcat_db_type )
 				{
 					case "mysqli": 	return "'".trim( mysqli_real_escape_string( Connect::Instance()->GetResource(), $value ) )."'";
 					case "sqlite": 	return "'".trim( sqlite_escape_string( $value ) )."'";

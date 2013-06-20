@@ -31,7 +31,7 @@
 
 	// Load model
 	$url = explode( "?", $_SERVER["REQUEST_URI"] );
-	$query = NULL;
+	$data = NULL;
 
 	if( $url[0] == "/admin" )
 	{
@@ -52,23 +52,31 @@
 			$class = new $classname();
 
 			if( $class instanceof Model )
-				$query = $class->select->QueryGetData();
+				$data = $class->select->QueryGetData();
 		}
 		catch( Exception $e ){}
 	}
 
-	$data = array(
+	$headers = array();
+	if( is_array( $data ) )
+	{
+		foreach( $data[0] AS $key => $value )
+			$headers[] = $key;
+	}
+
+	$content = array(
 		"title" => "Admin",
 		"menu" => $menu,
-		"data" => $query
+		"data" => $data,
+		"headers" => $headers
 	);
 
-	if( !$query )
-		$data["body"] = "This is the admin directory.";
+	if( !$data )
+		$content["body"] = "This is the admin directory.";
 
 	// Process template
 	$template = new Template( $controller->GetView() );
-	$template->SetVars( $data );
+	$template->SetVars( $content );
 	echo $template->Process();
 
 	echo "\n<!-- Page loaded in: ".round( microtime() - $ms, 5 )." ms -->";

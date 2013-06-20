@@ -24,12 +24,12 @@
 
 		public function Initialize()
 		{
-			switch( ninja_db_type )
+			switch( fatcat_db_type )
 			{
-				case "mysqli":	$this->resource = mysqli_connect( ninja_db_server, ninja_db_user, ninja_db_password );
-								mysqli_select_db( $this->resource, ninja_db_name ); break;
+				case "mysqli":	$this->resource = mysqli_connect( fatcat_db_server, fatcat_db_user, fatcat_db_password );
+								mysqli_select_db( $this->resource, fatcat_db_name ); break;
 
-				case "sqlite": 	$this->resource = sqlite_open( ninja_db_name, 0666, $error ); break;
+				case "sqlite": 	$this->resource = sqlite_open( fatcat_db_name, 0666, $error ); break;
 
 				default: 		throw new \ErrorException( "No database type chosen. Error in settings file." );
 			}

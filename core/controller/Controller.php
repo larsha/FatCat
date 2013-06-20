@@ -69,7 +69,7 @@
 		{
 			list( $catalog, $namespace, $class ) = ( $this->view ) ? explode( "\\", $this->view ) : $this->GetClassHierarchy();
 
-			return ninja_root_dir."view/".strtolower( $namespace )."/".strtolower( $class ).".tpl";
+			return fatcat_root_dir."view/".strtolower( $namespace )."/".strtolower( $class ).".tpl";
 		}
 
 		abstract public function GetData();

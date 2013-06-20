@@ -1,14 +1,14 @@
-PHP Ninja framework
+PHP Fat Cat framework
 ===================
 Lightweight, easy to use and fast progress with your projects.
 
 Quick start
 -----------
 
-1.  Publish Ninja-folder to your favourite webserver with PHP installed.
+1.  Publish FatCat-folder to your favourite webserver with PHP installed.
 2. 	Edit /core/settings.php
 3. 	Point your webserver root to /public
-4. 	Now you're ready to use the Ninja framework!
+4. 	Now you're ready to use the Fat Cat framework!
 
 Crash course
 ------------

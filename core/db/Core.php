@@ -5,7 +5,7 @@
 	{
 		public static function Identifier( $string )
 		{
-			switch( ninja_db_type )
+			switch( fatcat_db_type )
 			{
 				case "mysqli": 	return "`$string`";
 				case "sqlite": 	return "\"$string\"";
@@ -41,7 +41,7 @@
 		{
 			Connect::Instance()->AddQuery( $this->ToSQL() );
 
-			switch( ninja_db_type )
+			switch( fatcat_db_type )
 			{
 				case "mysqli":	$resource = mysqli_query( Connect::Instance()->GetResource(), $this->ToSQL() ) or die( mysqli_error( Connect::Instance()->GetResource() ) ); break;
 				case "sqlite":	$resource = sqlite_query( Connect::Instance()->GetResource(), $this->ToSQL() ); break;

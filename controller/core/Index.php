@@ -8,7 +8,7 @@
 		public function GetData()
 		{
 			return array(
-				"title" => "Ninja",
+				"title" => "Fat Cat",
 				"body" => "Lightweight, easy to use and fast progress with your projects."
 			);
 		}

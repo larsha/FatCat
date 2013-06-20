@@ -123,8 +123,14 @@
 		 */
 		private function ReplaceArray( $key, array $data )
 		{
+			if( !$match = $this->MatchArray( $key ) )
+				return;
+
+			$body = "";
 			foreach( $data AS $itemKey => $item )
-				$this->content = str_ireplace( "{{".$key.".".$itemKey."}}", $item, $this->content );
+				$body .= preg_replace( "/{{(".$itemKey."\.)?".$match[3]."}}/", $item, $match[1] );
+
+			$this->content = str_ireplace( $match[0], $body, $this->content );
 		}
 
 		/**
@@ -188,20 +194,32 @@
 					$this->ReplaceString( $contentKey, $dataKey );
 
 				// Replace multidimensional array
-				if( $this->IsMultidimensionalArray( $data ) )
+				if( is_array( $data ) && $this->IsMultidimensionalArray( $data ) )
 				{
 					$this->ReplaceMultidimensionalArray( $data, $contentItem, $content );
 				}
 				// Replace simple array
 				elseif( is_array( $data ) )
 				{
-					$row = $content;
-					foreach( $data AS $itemKey => $item )
+					if( $this->ContainsLoop( $content ) )
 					{
-						$row = str_ireplace( "{{".$contentItem.".".$itemKey."}}", $item, $row );
-					}
+						list( $innerRoot, $innerContent, $innerContentKey, $innerContentItem ) = $this->MatchArray( $contentItem, $content );
 
-					$body .= $row;
+						$innerBody = "";
+						foreach( $data AS $innerData )
+							$innerBody .= str_ireplace( "{{".$innerContentItem."}}", $innerData, $innerContent );
+
+						$body .= str_ireplace( $innerRoot, $innerBody, $content );
+					}
+					else
+					{
+						$row = $content;
+
+						foreach( $data AS $itemKey => $item )
+							$row = str_ireplace( "{{".$contentItem.".".$itemKey."}}", $item, $row );
+
+						$body .= $row;
+					}
 				}
 				// Replace string
 				else
@@ -260,6 +278,15 @@
 		private function ReplaceString( $key, $data )
 		{
 			$this->content = str_ireplace( "{{".$key."}}", $data, $this->content );
+		}
+
+		/**
+		 * @param string $string
+		 * @return bool
+		 */
+		private function ContainsLoop( $string )
+		{
+			return (bool)preg_match( '/{{ENDFOR}}/', $string );
 		}
 
 		/**
