@@ -5,9 +5,9 @@
 
 	class Data extends Controller
 	{
-		public function __construct( $args = array() )
+		public function __construct( $args = array(), $model )
 		{
-			parent::__construct( $args );
+			parent::__construct( $args, $model );
 
 			$this->view = "View\\Admin\\Data";
 		}

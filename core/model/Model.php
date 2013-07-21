@@ -4,6 +4,7 @@
 	use Core\Db\Insert;
 	use Core\Db\Select;
 	use Core\Db\Type;
+	use Core\Db\Update;
 
 	class Model
 	{
@@ -38,6 +39,7 @@
 		protected $id;
 		public $insert;
 		public $select;
+		public $update;
 
 		/**
 		 * @param string $table
@@ -49,6 +51,7 @@
 
 			$this->select = new Select( self::GetTableName() );
 			$this->insert = new Insert( self::GetTableName() );
+			$this->update = new Update( self::GetTableName() );
 
 			$this->Field( Type::Int, "id" );
 		}
@@ -63,6 +66,9 @@
 			$this->fields[] = array( $type, $field, $args );
 			$this->insert->Field( $type, $field, $args );
 			$this->select->Field( $type, $field, "", $args );
+
+			if( $field != "id" )
+				$this->update->Field( $type, $field, $args );
 		}
 
 		/**

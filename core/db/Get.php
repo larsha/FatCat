@@ -29,7 +29,7 @@
 		 */
 		public function Field( $dbType, $field, $alias = "", $args = array() )
 		{
-			$this->fields[] = array( $dbType, $field, $alias, $args );
+			$this->fields[$field] = array( $dbType, $field, $alias, $args );
 			return $this;
 		}
 

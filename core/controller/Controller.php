@@ -1,6 +1,7 @@
 <?php
 	namespace Core\Controller;
 
+	use Core\Db\Type;
 	use Core\Model\Model;
 
 	abstract class Controller
@@ -41,20 +42,27 @@
 		protected $args;
 		protected $view;
 
-		public function __construct( $args = array() )
+		public function __construct( $args = array(), $model = NULL)
 		{
 			$this->args = $args;
 
-			list( $catalog, $namespace, $class ) = $this->GetClassHierarchy();
-
-			try
+			if( $model !== NULL )
 			{
-				$classname = "Model\\$namespace\\$class";
-
-				if( class_exists( $classname ) )
-					$this->model = new $classname();
+				$this->model = $model;
 			}
-			catch( \Exception $e ){}
+			else
+			{
+				list( $catalog, $namespace, $class ) = $this->GetClassHierarchy();
+
+				try
+				{
+					$classname = "Model\\$namespace\\$class";
+
+					if( class_exists( $classname ) )
+						$this->model = new $classname();
+				}
+				catch( \Exception $e ){}
+			}
 		}
 
 		/**

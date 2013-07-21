@@ -61,14 +61,12 @@
 		// Load proper controller
 		if( isset( $model[4] ) && intval( $model[4] ) > 0 )
 		{
-			$controller = new \Controller\Core\Edit( array( "id" => $model[4] ) );
+			$controller = new \Controller\Core\Edit( array_merge( array( "id" => $model[4] ), $_REQUEST ), $class );
 		}
 		else
 		{
-			$controller = new \Controller\Core\Data();
+			$controller = new \Controller\Core\Data( array(), $class );
 		}
-
-		$controller->model = $class;
 	}
 
 	$content = array(

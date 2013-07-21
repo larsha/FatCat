@@ -48,7 +48,7 @@
 				default: 		throw new \ErrorException( "Database type is not defined in settings.php." );
 			}
 
-			if( is_bool( $resource ) )
+			if( $resource == false )
 				throw new \ErrorException( "Something went wrong with the database query. Check logs for info." );
 
 			return $resource;

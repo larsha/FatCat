@@ -24,7 +24,7 @@
 		 */
 		public function Field( $dbType, $field, $value )
 		{
-			$this->fields[] = array( $dbType, $field, $value );
+			$this->fields[$field] = array( $dbType, $field, $value );
 			return $this;
 		}
 

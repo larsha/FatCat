@@ -35,6 +35,7 @@
 				$length = isset( $args["length"] ) ? $args["length"] : 0;
 				$value = isset( $this->data[$name] ) ? $this->data[$name] : "";
 
+				$this->form[] = '<fieldset>';
 				$this->form[] = '<label>'.$name.'</label>';
 
 				switch( $type )
@@ -47,9 +48,11 @@
 					case Type::Text:		$this->GenerateText( $name, $value ); break;
 					default: 				throw new \ErrorException( "Type not found in Core\\Form\\Form." );
 				}
+
+				$this->form[] = '</fieldset>';
 			}
 
-			$this->form[] = '<input type="submit">';
+			$this->form[] = '<input type="submit" class="btn btn-primary">';
 			$this->form[] = '</form>';
 
 			return implode( " ", $this->form );
