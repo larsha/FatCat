@@ -14,6 +14,18 @@
 
 		public function GetData()
 		{
-			return array();
+			$data = $this->model->select->QueryGetData();
+			$headers = array();
+
+			if( is_array( $data ) && isset( $data[0] ) )
+			{
+				foreach( $data[0] AS $key => $value )
+					$headers[] = $key;
+			}
+
+			return array(
+				"data" => $data,
+				"headers" => $headers
+			);
 		}
 	}

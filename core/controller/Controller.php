@@ -37,11 +37,14 @@
 		}
 
 		/** @var $model Model */
-		protected $model;
+		public $model;
+		protected $args;
 		protected $view;
 
 		public function __construct( $args = array() )
 		{
+			$this->args = $args;
+
 			list( $catalog, $namespace, $class ) = $this->GetClassHierarchy();
 
 			try

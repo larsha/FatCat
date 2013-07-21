@@ -6,6 +6,7 @@
 
 	class Form
 	{
+		private $data;
 		private $form;
 		private $model;
 
@@ -16,6 +17,7 @@
 		{
 			$this->form = array();
 			$this->model = $model;
+			$this->data = $this->model->select->QueryGetSingleRow();
 		}
 
 		/**
@@ -31,8 +33,9 @@
 				list( $type, $name, $args ) = $field;
 
 				$length = isset( $args["length"] ) ? $args["length"] : 0;
+				$value = isset( $this->data[$name] ) ? $this->data[$name] : "";
 
-				$value = NULL; // TODO: Load value
+				$this->form[] = '<label>'.$name.'</label>';
 
 				switch( $type )
 				{

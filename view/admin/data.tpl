@@ -2,18 +2,24 @@ import View\Admin\Index
 
 {{REPLACE body}}
 	This is the data view
-	<table>
-		<tr>
-			{{FOR headers AS header}}
-				<th>{{header}}</th>
-			{{ENDFOR}}
-		</tr>
-		{{FOR data AS row}}
+	<table class="table table-striped table-condensed">
+		<thead>
 			<tr>
-				{{FOR row AS value}}
-					<td>{{value}}</td>
+				<th></th>
+				{{FOR headers AS header}}
+					<th>{{header}}</th>
 				{{ENDFOR}}
 			</tr>
-		{{ENDFOR}}
+		</thead>
+		<tbody>
+			{{FOR data AS row}}
+				<tr>
+					<td><a href="{{row.id}}">Edit</a></td>
+					{{FOR row AS value}}
+						<td>{{value}}</td>
+					{{ENDFOR}}
+				</tr>
+			{{ENDFOR}}
+		</tbody>
 	</table>
 {{ENDREPLACE}}

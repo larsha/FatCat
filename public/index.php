@@ -25,16 +25,3 @@
 	echo $template->Process();
 
 	echo "\n<!--Page loaded in: ".round( microtime() - $ms, 5 )." ms-->";
-
-	// Print debug data
-	if( fatcat_debug_mode )
-	{
-		echo "\nDebug mode is on.\n";
-
-		if( fatcat_db_server )
-		{
-			echo "Database queries:\n";
-			foreach( \Core\Db\Connect::Instance()->GetQueries() AS $query )
-				echo $query."\n";
-		}
-	}

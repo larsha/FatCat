@@ -38,6 +38,8 @@
 			if( $this->IncludeFile() )
 				return $this->content;
 
+			$this->DebugVars();
+
 			// Loop vars and replace content from file
 			foreach( $this->vars AS $key => $data )
 			{
@@ -189,6 +191,8 @@
 
 			foreach( $datas AS $dataKey => $data )
 			{
+				$row = "";
+
 				// Replace key
 				if( is_string( $dataKey ) )
 					$this->ReplaceString( $contentKey, $dataKey );
@@ -209,17 +213,16 @@
 						foreach( $data AS $innerData )
 							$innerBody .= str_ireplace( "{{".$innerContentItem."}}", $innerData, $innerContent );
 
-						$body .= str_ireplace( $innerRoot, $innerBody, $content );
+						$row = str_ireplace( $innerRoot, $innerBody, $content );
 					}
-					else
-					{
+
+					if( !$row )
 						$row = $content;
 
-						foreach( $data AS $itemKey => $item )
-							$row = str_ireplace( "{{".$contentItem.".".$itemKey."}}", $item, $row );
+					foreach( $data AS $itemKey => $item )
+						$row = str_ireplace( "{{".$contentItem.".".$itemKey."}}", $item, $row );
 
-						$body .= $row;
-					}
+					$body .= $row;
 				}
 				// Replace string
 				else
@@ -287,6 +290,29 @@
 		private function ContainsLoop( $string )
 		{
 			return (bool)preg_match( '/{{ENDFOR}}/', $string );
+		}
+
+		private function DebugVars()
+		{
+			if( !fatcat_debug_mode )
+				return;
+
+			// Add debug data
+			$debug = '<div class="alert alert-info">';
+			$debug .= "<strong>Debug mode is on.</strong>";
+
+			if( fatcat_db_server )
+			{
+				$debug .= "<p><strong>Database queries:</strong>";
+				$debug .= "<ol>";
+				foreach( \Core\Db\Connect::Instance()->GetQueries() AS $query )
+					$debug .= "<li>".$query."</li>";
+				$debug .= "</ol></p>";
+			}
+
+			$debug .= "</div>";
+
+			$this->vars["debug"] = $debug;
 		}
 
 		/**

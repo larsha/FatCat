@@ -15,7 +15,7 @@
 		</style>
 	</head>
 	<body>
-		<ul class="nav nav-tabs nav-stacked affix sidenav">
+		<ul id="navigation" class="nav nav-tabs nav-stacked affix sidenav">
 			<li>
 				<a href="/admin">Start</a>
 			</li>
@@ -33,22 +33,32 @@
 			{{ENDFOR}}
 		</ul>
 
-		<div class="container">
+		<div id="site-container" class="container">
 			<h1>{{title}}</h1>
 			<p>
 				{{body}}
 			</p>
 		</div>
 
-		<script type="text/javascript">
-			( function(){
-				var e = document.createElement( "script" );
-				e.type = "text/javascript";
-				e.src = "/js/bootstrap.min.js";
-				e.async = true;
+		{{debug}}
 
-				var m = document.getElementsByTagName( "head" )[0];
-				m.appendChild( e );
+		<script type="text/javascript">
+			var files = [
+				"/js/bootstrap.min.js",
+				"/js/admin.js"
+			];
+
+			( function(){
+				for( var i = 0; i < files.length; i++ )
+				{
+					var e = document.createElement( "script" );
+					e.type = "text/javascript";
+					e.src = files[i];
+					e.async = true;
+
+					var m = document.getElementsByTagName( "head" )[0];
+					m.appendChild( e );
+				}
 			})();
 		</script>
 	</body>

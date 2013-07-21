@@ -40,6 +40,9 @@
 				</div>
 			</div>
 		</div>
+
+		{{debug}}
+
 		<script type="text/javascript">
 			( function(){
 				var e = document.createElement( "script" );

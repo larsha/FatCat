@@ -89,6 +89,16 @@
 		}
 
 		/**
+		 * @return array
+		 */
+		public function QueryGetSingleRow()
+		{
+			$data = $this->QueryGetData();
+
+			return ( count( $data ) > 0 ) ? $data[0] : array();
+		}
+
+		/**
 		 * @return mixed
 		 */
 		public function QueryGetValue()

@@ -5,6 +5,7 @@
 
 	use Core\Template\Template;
 	use Core\Model\Model;
+	use Core\Db\Type;
 
 	// Build menu
 	$menu = array();
@@ -39,8 +40,6 @@
 	}
 	else
 	{
-		$controller = new \Controller\Core\Data();
-
 		// Get requested url
 		$model = explode( "/", $url[0] );
 
@@ -52,26 +51,34 @@
 			$class = new $classname();
 
 			if( $class instanceof Model )
-				$data = $class->select->QueryGetData();
+			{
+				if( isset( $model[4] ) && intval( $model[4] ) > 0 )
+					$class->select->WhereEquals( Type::Int, "id", $model[4] );
+			}
 		}
 		catch( Exception $e ){}
-	}
 
-	$headers = array();
-	if( is_array( $data ) )
-	{
-		foreach( $data[0] AS $key => $value )
-			$headers[] = $key;
+		// Load proper controller
+		if( isset( $model[4] ) && intval( $model[4] ) > 0 )
+		{
+			$controller = new \Controller\Core\Edit( array( "id" => $model[4] ) );
+		}
+		else
+		{
+			$controller = new \Controller\Core\Data();
+		}
+
+		$controller->model = $class;
 	}
 
 	$content = array(
 		"title" => "Admin",
-		"menu" => $menu,
-		"data" => $data,
-		"headers" => $headers
+		"menu" => $menu
 	);
 
-	if( !$data )
+	$content = array_merge( $content, $controller->GetData() );
+
+	if( $url[0] == "/admin" )
 		$content["body"] = "This is the admin directory.";
 
 	// Process template
