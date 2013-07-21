@@ -7,13 +7,6 @@
 		<link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<link href="/css/admin.css" rel="stylesheet">
 		<script src="/js/jquery-2.0.2.min.js"></script>
-		<style type="text/css">
-			ul.sidenav
-			{
-				top: 40px;
-				left: 20px;
-			}
-		</style>
 	</head>
 	<body>
 		<ul id="navigation" class="nav nav-tabs nav-stacked affix sidenav">
