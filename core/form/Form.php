@@ -94,7 +94,7 @@
 		 */
 		private function GenerateCheckbox( $name, $value )
 		{
-			$this->form[] = '<input type="checkbox" name="'.$name.'"'.( $value ) ? ' checked="checked"' : NULL.'>';
+			$this->form[] = '<input type="checkbox" name="'.$name.'"'.( ( $value ) ? ' checked="checked"' : NULL ).'>';
 		}
 
 		/**
