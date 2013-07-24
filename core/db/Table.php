@@ -21,7 +21,7 @@
 
 				return ( $data > 0 ) ? True : False;
 			}
-			elseif( fatcat_db_type == "mysqli" )
+			elseif( fatcat_db_type == "sqlite" )
 			{
 				$data = Db::Select( "sqlite_master" )
 						->Field( Type::String, "name" )
@@ -51,13 +51,12 @@
 		/**
 		 * @param int $dbType Type::*
 		 * @param string $field
-		 * @param int $length
-		 * @param string $foreignKey
+		 * @param array $args
 		 * @return $this
 		 */
-		public function Field( $dbType, $field, $length = 0, $foreignKey = "" )
+		public function Field( $dbType, $field, $args = array() )
 		{
-			$this->fields[] = array( $dbType, $field, $length, $foreignKey );
+			$this->fields[] = array( $dbType, $field, $args );
 			return $this;
 		}
 
@@ -77,7 +76,11 @@
 			$fields = array();
 			foreach( $this->fields AS $item )
 			{
-				list( $dbType, $field, $length, $foreignKey ) = $item;
+				list( $dbType, $field, $args ) = $item;
+
+				$length = isset( $args["length"] ) ? $args["length"] : 0;
+				$foreignKey = isset( $args["foreign_key"] ) ? $args["foreign_key"] : "";
+				$autoIncrement = isset( $args["auto_increment"] ) ? true : false;
 
 				$sql = Core::Identifier( $field );
 
@@ -104,6 +107,10 @@
 				// ID is always primary key
 				if( $field == "id" )
 					$sql .= " PRIMARY KEY";
+
+				// Add auto increment
+				if( $autoIncrement )
+					$sql .= " AUTO_INCREMENT";
 
 				// Foreign key
 				if( $foreignKey )

@@ -25,7 +25,7 @@
 			{
 				switch( fatcat_db_type )
 				{
-					case "mysqli": 	return "'".trim( mysqli_real_escape_string( Connect::Instance()->GetResource(), $value ) )."'";
+					case "mysqli": 	return "'".trim( mysqli_real_escape_string( Connect::Instance()->GetResource(), stripslashes( $value ) ) )."'";
 					case "sqlite": 	return "'".trim( sqlite_escape_string( $value ) )."'";
 				}
 			}

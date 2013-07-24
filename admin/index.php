@@ -19,6 +19,7 @@
 
 				/** @var $class Model */
 				$class = new $classname();
+
 				$hierarchy = $class->GetClassHierarchy();
 
 				$menu[$hierarchy[1]][] = array(
@@ -59,9 +60,16 @@
 		catch( Exception $e ){}
 
 		// Load proper controller
-		if( isset( $model[4] ) && intval( $model[4] ) > 0 )
+		if( isset( $model[4] ) && $model[4] != "" )
 		{
-			$controller = new \Controller\Core\Edit( array_merge( array( "id" => $model[4] ), $_REQUEST ), $class );
+			if( intval( $model[4] ) > 0 )
+			{
+				$controller = new \Controller\Core\Edit( array_merge( array( "id" => $model[4] ), $_REQUEST ), $class );
+			}
+			elseif( $model[4] == "new" )
+			{
+				$controller = new \Controller\Core\Edit( array_merge( array(), $_REQUEST ), $class );
+			}
 		}
 		else
 		{

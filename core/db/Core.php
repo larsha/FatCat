@@ -13,6 +13,19 @@
 			}
 		}
 
+		/**
+		 * @return int
+		 */
+		public static function LastInsertId()
+		{
+			switch( fatcat_db_type )
+			{
+				case "mysqli": 	return mysqli_insert_id( Connect::Instance()->GetResource() );
+				case "sqlite": 	return sqlite_last_insert_rowid( Connect::Instance()->GetResource() );
+				default: 		throw new \ErrorException( "Database type is not defined in settings.php." );
+			}
+		}
+
 		protected $table;
 		private $queries;
 

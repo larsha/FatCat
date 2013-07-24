@@ -89,6 +89,19 @@
 		}
 
 		/**
+		 * @param string $column
+		 * @return array
+		 */
+		public function QueryGetSingleColumn( $column )
+		{
+			$values = array();
+			foreach( $this->QueryGetData() AS $data )
+				$values[] = isset( $data[$column] ) ? $data[$column] : NULL;
+
+			return $values;
+		}
+
+		/**
 		 * @return array
 		 */
 		public function QueryGetSingleRow()

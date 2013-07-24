@@ -18,10 +18,16 @@
 
 		public function GetData()
 		{
-			$this->model->select->WhereEquals( Type::Int, "id", $this->args["id"] );
+			if( $this->args["id"] )
+			{
+				$this->model->select->WhereEquals( Type::Int, "id", $this->args["id"] );
+			}
+
+			$form = new Form( $this->model );
+			$form->ExcludeField( "id" );
 
 			return array(
-				"form" => new Form( $this->model )
+				"form" => $form
 			);
 		}
 
@@ -30,21 +36,25 @@
 			if( !isset( $_POST ) || count( $_POST ) <= 0 )
 				return;
 
+			if( $this->args["id"] )
+			{
+				$this->model->Field( Type::Int, "id", $this->args["id"] );
+			}
+
 			foreach( $_POST AS $name => $value )
 			{
 				foreach( $this->model->Fields() AS $field )
 				{
 					if( $field[1] == $name && $name != "id" )
 					{
-						$this->model->update->Field( $field[0], $field[1], $value );
+						$this->model->Field( $field[0], $field[1], $value, $field[3] );
 					}
 				}
 			}
 
-			$this->model->update->WhereEquals( Type::Int, "id", $this->args["id"] );
-			$this->model->update->Save();
+			$id = $this->model->Save();
 
-			header( "Location: ".$this->args["id"] );
+			header( "Location: ".$id );
 			exit();
 		}
 	}

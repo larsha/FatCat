@@ -30,7 +30,6 @@
 
 		public function Save()
 		{
-			$this->Debug(); exit();
 			$this->Query();
 		}
 

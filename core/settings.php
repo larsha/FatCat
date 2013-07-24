@@ -5,7 +5,7 @@
 	 * The root directory in the file system tree of FatCat catalog.
 	 * Example: /var/www/FatCat/
 	 */
-	define( "fatcat_root_dir", "/Users/rasmusbrandberg/FatCat/" );
+	define( "fatcat_root_dir", "/var/www/FatCat/" );
 
 	/**
 	 * The base url this Fat Cat installation is hosting.
@@ -21,7 +21,7 @@
 	/**
 	 * Valid options are: sqlite, mysqli
 	 */
-	define( "fatcat_db_type", "mysqli" );
+	define( "fatcat_db_type", "" );
 
 	/**
 	 * Database name or, if database is type sqlite, the directory of the database file.
@@ -31,7 +31,7 @@
 	/**
 	 * The user to connect to database with (not used with "sqlite").
 	 */
-	define( "fatcat_db_user", "root" );
+	define( "fatcat_db_user", "" );
 
 	/**
 	 * The password to connect to database with (not used with "sqlite").

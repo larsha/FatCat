@@ -2,6 +2,9 @@ import View\Admin\Index
 
 {{REPLACE body}}
 	This is the data view
+	<p>
+		<a href="new" class="btn">New</a>
+	</p>
 	<table class="table table-striped table-condensed">
 		<thead>
 			<tr>

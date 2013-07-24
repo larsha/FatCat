@@ -1,6 +1,7 @@
 <?php
 	namespace Core\Model;
 
+	use Core\Db\Core;
 	use Core\Db\Insert;
 	use Core\Db\Select;
 	use Core\Db\Type;
@@ -53,22 +54,25 @@
 			$this->insert = new Insert( self::GetTableName() );
 			$this->update = new Update( self::GetTableName() );
 
-			$this->Field( Type::Int, "id" );
+			$this->Field( Type::Int, "id", NULL, array( "auto_increment" => true ) );
 		}
 
 		/**
 		 * @param int $type
-		 * @param mixed $field
+		 * @param string $field
+		 * @param mixed $value
 		 * @param mixed $args
 		 */
-		public final function Field( $type, $field, $args = NULL )
+		public final function Field( $type, $field, $value = NULL, $args = NULL )
 		{
-			$this->fields[] = array( $type, $field, $args );
-			$this->insert->Field( $type, $field, $args );
+			$this->fields[$field] = array( $type, $field, $value, $args );
 			$this->select->Field( $type, $field, "", $args );
 
 			if( $field != "id" )
-				$this->update->Field( $type, $field, $args );
+			{
+				$this->insert->Field( $type, $field, $value );
+				$this->update->Field( $type, $field, $value );
+			}
 		}
 
 		/**
@@ -95,5 +99,41 @@
 			list( $catalog, $namespace, $class ) = self::GetClassHierarchy();
 
 			return strtolower( $namespace )."_".strtolower( $class );
+		}
+
+		/**
+		 * @return bool
+		 */
+		public function IsForeign()
+		{
+			foreach( $this->fields AS $field )
+			{
+				list( $type, $name, $value, $args ) = $field;
+
+				if( isset( $args["foreign_key"] ) )
+					return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * @return int
+		 */
+		public function Save()
+		{
+			if( $this->fields["id"][2] > 0 )
+			{
+				$query = $this->update;
+				$query->WhereEquals( Type::Int, "id", $this->fields["id"][2] );
+			}
+			else
+			{
+				$query = $this->insert;
+			}
+
+			$query->Save();
+
+			return ( $this->fields["id"][2] > 0 ) ? $this->fields["id"][2] : Core::LastInsertId();
 		}
 	}
