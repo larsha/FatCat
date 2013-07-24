@@ -6,6 +6,20 @@
 	class Table extends Put
 	{
 		/**
+		 * @return string
+		 * @throws \ErrorException
+		 */
+		private static function AutoIncrement()
+		{
+			switch( fatcat_db_type )
+			{
+				case "mysqli": return "AUTO_INCREMENT";
+				case "sqlite": return "";
+				default: throw new \ErrorException( "Database type doesn't exists." );
+			}
+		}
+
+		/**
 		 * @param string $table
 		 * @return bool
 		 */
@@ -110,7 +124,7 @@
 
 				// Add auto increment
 				if( $autoIncrement )
-					$sql .= " AUTO_INCREMENT";
+					$sql .= " ".self::AutoIncrement();
 
 				// Foreign key
 				if( $foreignKey )
