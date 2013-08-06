@@ -34,6 +34,8 @@
 
 	$models = getContents( opendir( $root ) );
 
+	$instances = array();
+
 	// Loop model dirs
 	foreach( $models AS $model )
 	{
@@ -51,24 +53,32 @@
 			$class = "Model\\$model\\$table";
 
 			/** @var $instance \Core\Model\Model */
-			$instance = new $class();
-
-			// Check if table exists
-			if( Table::Exists( strtolower( $model."_".$table ) ) )
-				continue;
-
-			// Create table
-			$db = new Table( strtolower( $model."_".$table ) );
-
-			// Loop models fields
-			foreach( $instance->Fields() AS $field )
-			{
-				list( $type, $name, $value, $args ) = $field;
-
-				$db->Field( $type, $name, $args );
-			}
-
-			// Query database
-			$db->Query();
+			$instances[] = new $class();
 		}
+	}
+
+	$instances = array_merge( $instances, array(
+		new \Core\User\Session()
+	) );
+
+	/** @var $instance \Core\Model\Model */
+	foreach( $instances AS $instance )
+	{
+		// Check if table exists
+		if( Table::Exists( $instance->GetTableName() ) )
+			continue;
+
+		// Create table
+		$db = new Table( $instance->GetTableName() );
+
+		// Loop models fields
+		foreach( $instance->Fields() AS $field )
+		{
+			list( $type, $name, $value, $args ) = $field;
+
+			$db->Field( $type, $name, $args );
+		}
+
+		// Query database
+		$db->Query();
 	}

@@ -3,7 +3,7 @@ import View\Admin\Index
 {{REPLACE body}}
 	This is the data view
 	<p>
-		<a href="new" class="btn">New</a>
+		<a href="new" class="btn btn-default">New</a>
 	</p>
 	<table class="table table-striped table-condensed">
 		<thead>

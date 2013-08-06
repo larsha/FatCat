@@ -6,6 +6,37 @@
 	use Core\Template\Template;
 	use Core\Model\Model;
 	use Core\Db\Type;
+	use Core\User\Auth;
+
+	$url = explode( "?", $_SERVER["REQUEST_URI"] );
+
+	// Logout user
+	if( $url[0] == "/admin/logout" )
+	{
+		Auth::DestroySession();
+
+		header( "Location: /admin" );
+		exit();
+	}
+
+	// Check for login
+	if( !Auth::UserIsLoggedIn( $_COOKIE["auth"] ) )
+	{
+		if( isset( $_POST["username"] ) && isset( $_POST["password"] ) )
+		{
+			if( $_POST["username"] == fatcat_user_name && $_POST["password"] == fatcat_user_password )
+			{
+				Auth::CreateSession( 0 );
+
+				header( "Location: /admin" );
+				exit();
+			}
+		}
+
+		$template = new Template( fatcat_root_dir."view/admin/login.tpl" );
+		echo $template->Process();
+		exit();
+	}
 
 	// Build menu
 	$menu = array();
@@ -32,7 +63,6 @@
 	}
 
 	// Load model
-	$url = explode( "?", $_SERVER["REQUEST_URI"] );
 	$data = NULL;
 
 	if( $url[0] == "/admin" )

@@ -57,7 +57,7 @@
 
 				$foreign = ( $foreignKey ) ? new $foreignKey : NULL;
 
-				$this->form[] = '<fieldset>';
+				$this->form[] = '<div class="form-group">';
 				$this->form[] = '<label>'.$name.'</label>';
 
 				if( $foreign instanceof Model )
@@ -78,10 +78,10 @@
 					}
 				}
 
-				$this->form[] = '</fieldset>';
+				$this->form[] = '</div>';
 			}
 
-			$this->form[] = '<input type="submit" class="btn btn-primary">';
+			$this->form[] = '<input type="submit" class="btn btn-default">';
 			$this->form[] = '</form>';
 
 			return implode( " ", $this->form );
@@ -125,7 +125,7 @@
 		 */
 		private function GenerateInput( $name, $value, $length )
 		{
-			$this->form[] = '<input type="text" name="'.$name.'" value="'.$value.'"'.( ( $length > 0 ) ? ' maxlength="'.$length.'"' : NULL ).'>';
+			$this->form[] = '<input type="text" name="'.$name.'" value="'.$value.'"'.( ( $length > 0 ) ? ' maxlength="'.$length.'"' : NULL ).' class="form-control">';
 		}
 
 		/**
@@ -134,7 +134,7 @@
 		 */
 		private function GenerateSelect( $name, $values = array() )
 		{
-			$this->form[] = '<select name="'.$name.'">';
+			$this->form[] = '<select name="'.$name.'" class="form-control">';
 
 			foreach( $values AS $value )
 				$this->form[] = '<option>'.$value.'</option>';
