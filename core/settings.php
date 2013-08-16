@@ -14,6 +14,21 @@
 	define( "fatcat_site_url", "" );
 
 	/**
+	 * Random string. Change to anything unique.
+	 */
+	define( "fatcat_site_random", "" );
+
+	/**
+	 * This is the root users and superadmin username.
+	 */
+	define( "fatcat_user_name", "" );
+
+	/**
+	 * This is the root users and superadmin password.
+	 */
+	define( "fatcat_user_password", "" );
+
+	/**
 	 * Database server to connect to. "localhost" or IP address.
 	 */
 	define( "fatcat_db_server", "localhost" );

@@ -20,7 +20,7 @@
 	}
 
 	// Check for login
-	if( !Auth::UserIsLoggedIn( $_COOKIE["auth"] ) )
+	if( !Auth::UserIsLoggedIn() )
 	{
 		if( isset( $_POST["username"] ) && isset( $_POST["password"] ) )
 		{

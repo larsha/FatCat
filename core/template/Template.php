@@ -2,6 +2,7 @@
 	namespace Core\Template;
 
 	use Core\Form\Form;
+	use Core\User\Auth;
 
 	class Template
 	{
@@ -75,7 +76,7 @@
 		private function CleanUp()
 		{
 			// Remove unused variables
-			$this->content = preg_replace( "/{{[a-z \.=>]+}}/is", "", $this->content );
+			$this->content = preg_replace( "/{{[a-z \.=>:]+}}/is", "", $this->content );
 		}
 
 		/**
@@ -133,6 +134,26 @@
 				$body .= preg_replace( "/{{(".$itemKey."\.)?".$match[3]."}}/", $item, $match[1] );
 
 			$this->content = str_ireplace( $match[0], $body, $this->content );
+		}
+
+		private function ReplaceCustomVars( $customVar, $content )
+		{
+			switch( $customVar )
+			{
+				case "Auth::UserIsLoggedIn": 	$if = Auth::UserIsLoggedIn(); break;
+				default:						return;
+			}
+
+			$items = explode( "{{ELSE}}", $content );
+
+			if( count( $items ) == 1 && $if )
+			{
+				$this->content = str_ireplace( $content, $items[0], $this->content );
+			}
+			else
+			{
+				$this->content = ( $if ) ? str_ireplace( $content, $items[0], $this->content ) : str_ireplace( $content, $items[1], $this->content );
+			}
 		}
 
 		/**
@@ -249,14 +270,19 @@
 		 */
 		private function ReplaceStatements()
 		{
-			if( preg_match_all( "/{{IF ([a-z]+)}}(.*?){{ENDIF}}/is", $this->content, $matches ) )
+			if( preg_match_all( "/{{IF ([a-z:]+)}}(.*?){{ENDIF}}/is", $this->content, $matches ) )
 			{
 				foreach( $matches[2] AS $key => $match )
 				{
 					$items = explode( "{{ELSE}}", $match );
 
+					// Custom var
+					if( strpos( $matches[1][$key], "::" ) !== FALSE )
+					{
+						$this->ReplaceCustomVars( $matches[1][$key], $matches[0][$key] );
+					}
 					// No else and var exist
-					if( count( $items ) == 1 && array_key_exists( $matches[1][$key], $this->vars ) )
+					elseif( count( $items ) == 1 && array_key_exists( $matches[1][$key], $this->vars ) )
 					{
 						$this->content = str_ireplace( $matches[0][$key], $items[0], $this->content );
 					}

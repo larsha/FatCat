@@ -29,22 +29,25 @@
 			setcookie( "auth", base64_encode(
 				implode( "-", $auth )."-".
 				sha1( implode( "-", $auth )."-".fatcat_site_random ) 	// Validation hash with som parameters and something unique to this site.
-			) );
+			),
+			null,
+			"/");
 		}
 
 		public static function DestroySession()
 		{
-			// TODO: Check, doesn't work.
-			setcookie( "auth", false, 0 );
+			setcookie( "auth", "", time() - 3600 );
 		}
 
 		/**
-		 * @param mixed $session $_COOKIE["auth"]
 		 * @return bool
 		 */
-		public static function UserIsLoggedIn( $session )
+		public static function UserIsLoggedIn()
 		{
-			$auth = explode( "-", base64_decode( $session ) );
+			if( !isset( $_COOKIE["auth"] ) )
+				return false;
+
+			$auth = explode( "-", base64_decode( $_COOKIE["auth"] ) );
 
 			// Unique string does not match. Someone tried to create their own cookie.
 			if( $auth[3] != sha1( $auth[0]."-".$auth[1]."-".$auth[2]."-".fatcat_site_random ) )
@@ -59,7 +62,7 @@
 
 		public static function RequireLogin()
 		{
-			if( !self::UserIsLoggedIn( $_COOKIE ) )
+			if( !self::UserIsLoggedIn() )
 			{
 				header( "Location: /login" );
 				exit();

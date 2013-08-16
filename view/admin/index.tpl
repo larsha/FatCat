@@ -11,6 +11,8 @@
 		<div id="site-container" class="container">
 			<div class="row">
 				<div class="col-2">
+					<a href="/admin/logout" class="btn btn-default btn-small">Logout</a>
+
 					{{IF menu}}
 					<ul id="navigation" class="nav nav-pills nav-stacked sidenav">
 						<li>
@@ -30,8 +32,6 @@
 						{{ENDFOR}}
 					</ul>
 					{{ENDIF}}
-
-					<a href="/admin/logout" class="btn btn-default">Logout</a>
 				</div>
 				<div class="col-10">
 					<h1>{{title}}</h1>
